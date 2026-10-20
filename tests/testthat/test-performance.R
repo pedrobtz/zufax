@@ -4,7 +4,7 @@
 test_that("a default snapshot is fast once warm", {
   skip_on_cran()
   skip_if_not(identical(Sys.info()[["sysname"]], "Linux"), "timed on Linux only")
-  withr::local_options(fax.root = NULL, fax.os = NULL)
+  withr::local_options(zufax.root = NULL, zufax.os = NULL)
   facts_df(facts(refresh = TRUE))
   times <- vapply(1:5, \(i) system.time(facts_df(facts(refresh = TRUE)))[["elapsed"]], numeric(1))
   # Generous: shared CI machines and R-devel builds are slow and noisy. This
@@ -16,7 +16,7 @@ test_that("a default snapshot is fast once warm", {
 test_that("usage() costs well under a millisecond per call", {
   skip_on_cran()
   skip_if_not(identical(Sys.info()[["sysname"]], "Linux"), "timed on Linux only")
-  withr::local_options(fax.root = NULL, fax.os = NULL)
+  withr::local_options(zufax.root = NULL, zufax.os = NULL)
   local_usage_reset()
   tick <- 0
   local_mocked_bindings(usage_now = function() {

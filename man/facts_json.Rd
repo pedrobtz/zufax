@@ -7,7 +7,7 @@
 facts_json(x = facts(), namespaces = NULL, pretty = FALSE, metadata = FALSE)
 }
 \arguments{
-\item{x}{A \code{fax} object from \code{\link[=facts]{facts()}}.}
+\item{x}{A \code{zufax} object from \code{\link[=facts]{facts()}}.}
 
 \item{namespaces}{Namespaces to include. With \code{NULL}, all default namespaces
 plus any opt-in namespace already resolved in \code{x}.}

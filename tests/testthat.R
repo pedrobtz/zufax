@@ -7,6 +7,6 @@
 # * https://testthat.r-lib.org/articles/special-files.html
 
 library(testthat)
-library(fax)
+library(zufax)
 
-test_check("fax")
+test_check("zufax")

@@ -56,9 +56,9 @@ imds_url <- paste0("http://169.254.169.254/metadata/instance?api-version=", imds
 # timeout once); refresh = TRUE asks again.
 azure_imds <- function(ctx) {
   ctx$shared("azure_imds", function(ctx) {
-    if (!ctx$refresh && !is.null(.fax$imds[[imds_url]])) {
+    if (!ctx$refresh && !is.null(.zufax$imds[[imds_url]])) {
       ctx$note(imds_url)
-      return(.fax$imds[[imds_url]])
+      return(.zufax$imds[[imds_url]])
     }
     result <- tryCatch(
       {
@@ -68,10 +68,10 @@ azure_imds <- function(ctx) {
         response <- ctx$http(imds_url, headers = c(Metadata = "true"), timeout = 1)
         list(ok = TRUE, data = jsonlite::fromJSON(response$body, simplifyVector = FALSE))
       },
-      fax_unavailable = function(cnd) list(ok = FALSE, message = conditionMessage(cnd)),
+      zufax_unavailable = function(cnd) list(ok = FALSE, message = conditionMessage(cnd)),
       error = function(cnd) list(ok = FALSE, message = conditionMessage(cnd))
     )
-    .fax$imds[[imds_url]] <- result
+    .zufax$imds[[imds_url]] <- result
     result
   })
 }

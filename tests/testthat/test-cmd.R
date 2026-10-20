@@ -1,5 +1,5 @@
 test_that("run_cmd() returns NULL for missing commands", {
-  expect_null(run_cmd("fax-command-that-does-not-exist"))
+  expect_null(run_cmd("zufax-command-that-does-not-exist"))
 })
 
 test_that("run_cmd() captures stdout and status", {
@@ -9,7 +9,7 @@ test_that("run_cmd() captures stdout and status", {
 })
 
 test_that("run_cmd() uses the mock hook", {
-  withr::local_options(fax.cmd_mock = function(cmd, args) {
+  withr::local_options(zufax.cmd_mock = function(cmd, args) {
     switch(
       cmd,
       sysctl = c("hw.memsize: 1024"),
@@ -23,7 +23,7 @@ test_that("run_cmd() uses the mock hook", {
 })
 
 test_that("run_cmd() output with non-UTF-8 bytes becomes valid strings", {
-  withr::local_options(fax.cmd_mock = function(cmd, args) c("ok", "Intel\xae Core"))
+  withr::local_options(zufax.cmd_mock = function(cmd, args) c("ok", "Intel\xae Core"))
   out <- run_cmd("sysctl")
   expect_true(all(validUTF8(out$stdout)))
   expect_equal(out$stdout, c("ok", "Intel<ae> Core"))

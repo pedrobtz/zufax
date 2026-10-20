@@ -16,7 +16,7 @@
 
 ## Notes for reviewers
 
-* fax reads system files such as `/proc` and `/sys` on Linux and runs a few
+* zufax reads system files such as `/proc` and `/sys` on Linux and runs a few
   read-only system commands where no file exists, each with a timeout:
   `sysctl`, `sw_vers`, `vm_stat`, `id -u`/`id -g` and `sh -c 'ulimit -n'`
   on macOS; `df -Pk` on Unix; `getconf PAGESIZE` on Linux when
@@ -27,7 +27,7 @@
   `packages` facts. It never writes outside `tempdir()` and never changes
   system state. Examples, tests and the vignette never start Python.
 * It makes no network requests unless the user explicitly asks for cloud
-  instance metadata with `facts(cloud = TRUE)` or `options(fax.cloud = TRUE)`.
+  instance metadata with `facts(cloud = TRUE)` or `options(zufax.cloud = TRUE)`.
   Requests then go only to the link-local instance metadata address
   (169.254.169.254) with a 1 second timeout. No example, test or vignette
   makes a network request.

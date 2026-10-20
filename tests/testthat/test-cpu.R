@@ -33,7 +33,7 @@ test_that("arm64 cpuinfo gives vendor, flags and topology from sysfs", {
     "sys/devices/system/cpu/cpu1/topology/core_id" = "1",
     "sys/devices/system/cpu/cpu1/topology/physical_package_id" = "0"
   ))
-  withr::local_options(fax.os = "linux")
+  withr::local_options(zufax.os = "linux")
   f <- facts("cpu")
   expect_equal(f[["cpu.vendor"]], "ARM")
   expect_equal(f[["cpu.isa_level"]], "arm64+sve")
@@ -46,7 +46,7 @@ test_that("arm64 cpuinfo gives vendor, flags and topology from sysfs", {
 
 test_that("cpu.host.logical falls back to counting processors", {
   local_root(list("proc/cpuinfo" = c("processor\t: 0", "", "processor\t: 1", "", "processor\t: 2")))
-  withr::local_options(fax.os = "linux")
+  withr::local_options(zufax.os = "linux")
   expect_equal(fact("cpu.host.logical"), 3)
 })
 

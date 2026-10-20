@@ -34,13 +34,13 @@ proxy_vars <- c("http_proxy", "https_proxy", "no_proxy", "HTTP_PROXY", "HTTPS_PR
 
 register_env_facts <- function() {
   register(resolver("env.vars", cache = FALSE, function(ctx) {
-    mode <- getOption("fax.redact", "default")
+    mode <- getOption("zufax.redact", "default")
     if (!mode %in% c("default", "allowlist", "none")) {
-      stop("`fax.redact` must be \"default\", \"allowlist\" or \"none\".", call. = FALSE)
+      stop("`zufax.redact` must be \"default\", \"allowlist\" or \"none\".", call. = FALSE)
     }
     r_note(ctx, "Sys.getenv()")
     vars <- all_env()
-    redact_env(vars, mode, getOption("fax.redact_allowlist", character()))
+    redact_env(vars, mode, getOption("zufax.redact_allowlist", character()))
   }))
 
   register(resolver("env.proxies", cache = FALSE, function(ctx) {

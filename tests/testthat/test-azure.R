@@ -113,7 +113,7 @@ test_that("a blocked IMDS is unavailable, and only tried once", {
 
 test_that("print() shows the Azure platform and, with cloud = TRUE, the VM", {
   skip_if_not_installed("jsonlite")
-  withr::local_options(fax.skip = "runtime")
+  withr::local_options(zufax.skip = "runtime")
   local_azure_env()
   local_imds(imds_body())
   local_fixture("aks-pod-downward-api")
@@ -127,8 +127,11 @@ test_that("the HTTP transport fails fast and restores no_proxy", {
   withr::local_envvar(NO_PROXY = NA)
   withr::local_envvar(no_proxy = "example.com")
   start <- proc.time()[["elapsed"]]
-  cnd <- tryCatch(http_transport("http://127.0.0.1:9/", character(), 1), fax_unavailable = identity)
-  expect_s3_class(cnd, "fax_unavailable")
+  cnd <- tryCatch(
+    http_transport("http://127.0.0.1:9/", character(), 1),
+    zufax_unavailable = identity
+  )
+  expect_s3_class(cnd, "zufax_unavailable")
   expect_match(conditionMessage(cnd), "^Request failed")
   expect_lt(proc.time()[["elapsed"]] - start, 5)
   expect_equal(Sys.getenv("no_proxy"), "example.com")

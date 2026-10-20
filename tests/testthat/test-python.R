@@ -23,7 +23,7 @@ test_that("a venv is described from pyvenv.cfg without running Python", {
     )
   )
   local_python_env(VIRTUAL_ENV = venv)
-  withr::local_options(fax.os = "linux", fax.cmd_mock = function(cmd, args) {
+  withr::local_options(zufax.os = "linux", zufax.cmd_mock = function(cmd, args) {
     stop("Python must not run")
   })
   f <- facts(refresh = TRUE)
@@ -47,7 +47,7 @@ test_that("uv environments are recognized", {
     )
   )
   local_python_env(VIRTUAL_ENV = venv)
-  withr::local_options(fax.os = "linux")
+  withr::local_options(zufax.os = "linux")
   expect_equal(fact("runtime.python.env_type"), "uv")
   expect_equal(fact("runtime.python.version"), "3.12.6")
 })
@@ -62,7 +62,7 @@ test_that("conda prefixes are described from conda-meta", {
     )
   )
   local_python_env(CONDA_PREFIX = conda)
-  withr::local_options(fax.os = "linux")
+  withr::local_options(zufax.os = "linux")
   f <- facts(refresh = TRUE)
   expect_equal(f[["runtime.python.env_type"]], "conda")
   expect_equal(f[["runtime.python.version"]], "3.11.9")
@@ -72,7 +72,7 @@ test_that("conda prefixes are described from conda-meta", {
 test_that("a system interpreter is probed once in a separate process", {
   local_python_env()
   calls <- 0
-  withr::local_options(fax.cmd_mock = function(cmd, args) {
+  withr::local_options(zufax.cmd_mock = function(cmd, args) {
     if (cmd != "/usr/bin/python3" || args[1] != "-c") {
       return(NULL)
     }
@@ -98,7 +98,7 @@ test_that("a system interpreter is probed once in a separate process", {
 test_that("a failing interpreter is probed once per session until refresh", {
   local_python_env()
   calls <- 0
-  withr::local_options(fax.cmd_mock = function(cmd, args) {
+  withr::local_options(zufax.cmd_mock = function(cmd, args) {
     if (cmd != "/usr/bin/python3" || args[1] != "-c") {
       return(NULL)
     }
@@ -130,7 +130,7 @@ test_that("RETICULATE_PYTHON wins over other variables", {
     RETICULATE_PYTHON = file.path(venv, "bin", "python"),
     CONDA_PREFIX = "/opt/conda"
   )
-  withr::local_options(fax.os = "linux")
+  withr::local_options(zufax.os = "linux")
   expect_equal(fact("runtime.python.path"), file.path(venv, "bin", "python"))
   expect_equal(fact("runtime.python.version"), "3.10.14")
 })
@@ -161,7 +161,7 @@ test_that("Windows venvs use Scripts and Lib", {
     )
   )
   local_python_env(VIRTUAL_ENV = venv)
-  withr::local_options(fax.os = "windows")
+  withr::local_options(zufax.os = "windows")
   f <- facts(refresh = TRUE)
   expect_equal(f[["runtime.python.path"]], file.path(venv, "Scripts/python.exe"))
   expect_equal(f[["runtime.python.site_packages"]], file.path(venv, "Lib", "site-packages"))

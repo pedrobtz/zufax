@@ -1,9 +1,9 @@
 # Run an external command. Returns list(status, stdout), or NULL when the
 # command does not exist or cannot be started. Tests replace it with
-# `options(fax.cmd_mock = function(cmd, args) ...)`, which may return a
+# `options(zufax.cmd_mock = function(cmd, args) ...)`, which may return a
 # character vector (stdout, status 0), a list(status, stdout), or NULL.
 run_cmd <- function(cmd, args = character(), timeout = 5) {
-  mock <- getOption("fax.cmd_mock")
+  mock <- getOption("zufax.cmd_mock")
   if (is.function(mock)) {
     return(as_cmd_result(mock(cmd, args)))
   }

@@ -1,4 +1,4 @@
-# fax 0.1.0
+# zufax 0.1.0
 
 * Initial CRAN submission.
 * `effective_cores()` and `effective_memory()` return the CPU cores and memory
@@ -19,7 +19,7 @@
   uid, privileges) and Python (interpreter, version, venv/uv/conda/system,
   site-packages) without starting Python inside R.
 * `env.vars` reports environment variables with secrets redacted by default
-  (`fax.redact`, `fax.redact_allowlist`); `env.proxies` and `disk.tmpdir.*`
+  (`zufax.redact`, `zufax.redact_allowlist`); `env.proxies` and `disk.tmpdir.*`
   describe proxies and the temporary directory.
 * macOS and Windows are supported for host facts: OS, CPU model and
   topology, memory, boot time, virtualization (and Azure on Windows), the

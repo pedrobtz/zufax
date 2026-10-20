@@ -72,7 +72,7 @@ test_that("corrupt files in an AKS pod never cause errors", {
 
 test_that("an empty root gives no errors", {
   local_root()
-  withr::local_options(fax.os = "linux")
+  withr::local_options(zufax.os = "linux")
   local_azure_env()
   expect_equal(errors_in(), character())
   df <- facts_df(facts(refresh = TRUE))
@@ -113,7 +113,7 @@ test_that("garbage command output never causes errors", {
   local_python_env()
   for (os in c("darwin", "windows", "linux")) {
     for (out in outputs) {
-      withr::local_options(fax.os = os, fax.cmd_mock = function(cmd, args) out)
+      withr::local_options(zufax.os = os, zufax.cmd_mock = function(cmd, args) out)
       local_root()
       expect_equal(errors_in(), character(), label = paste(os, deparse(out)))
     }

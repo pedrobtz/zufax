@@ -116,7 +116,7 @@ python_probe_script <- paste0(
 # retried only with refresh = TRUE, at most once per facts() call.
 python_probe <- function(ctx, path) {
   ctx$shared(paste0("python_probe:", path), function(ctx) {
-    cached <- .fax$python_probe[[path]]
+    cached <- .zufax$python_probe[[path]]
     if (!is.null(cached) && (!isTRUE(cached$failed) || !ctx$refresh)) {
       ctx$note(paste(path, "-c <probe>"))
       return(if (isTRUE(cached$failed)) NULL else cached)
@@ -124,7 +124,7 @@ python_probe <- function(ctx, path) {
     quote <- if (.Platform$OS.type == "windows") "cmd" else "sh"
     out <- ctx$cmd(path, c("-c", shQuote(python_probe_script, type = quote)), timeout = 5)
     if (is.null(out) || out$status != 0L || !length(out$stdout)) {
-      .fax$python_probe[[path]] <- list(failed = TRUE)
+      .zufax$python_probe[[path]] <- list(failed = TRUE)
       return(NULL)
     }
     kv <- parse_kv(out$stdout, sep = "=")
@@ -136,7 +136,7 @@ python_probe <- function(ctx, path) {
       site = unname(kv[names(kv) == "site"]),
       usersite = unname(kv["usersite"])
     )
-    .fax$python_probe[[path]] <- probe
+    .zufax$python_probe[[path]] <- probe
     probe
   })
 }

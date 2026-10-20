@@ -6,7 +6,7 @@ test_that("rlimits are read from /proc/self/limits", {
       "Max address space         unlimited            unlimited            bytes     "
     )
   ))
-  withr::local_options(fax.os = "linux")
+  withr::local_options(zufax.os = "linux")
   expect_equal(fact("memory.rlimit.data"), 1024^3)
   expect_equal(fact("memory.rlimit.as"), Inf)
 })
@@ -20,7 +20,7 @@ test_that("memory.host.available is approximated on old kernels", {
       "Cached:          200 kB"
     )
   ))
-  withr::local_options(fax.os = "linux")
+  withr::local_options(zufax.os = "linux")
   expect_equal(fact("memory.host.available"), 310 * 1024)
 })
 

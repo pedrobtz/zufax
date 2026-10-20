@@ -14,7 +14,7 @@ k8s_env_defaults <- c(
 )
 
 k8s_env <- function(ctx, field) {
-  mapping <- getOption("fax.k8s.env")
+  mapping <- getOption("zufax.k8s.env")
   name <- mapping[field] %|NA|% k8s_env_defaults[[field]]
   value <- ctx$env(unname(name))
   if (is.null(value) || !nzchar(value)) NULL else value
@@ -22,11 +22,11 @@ k8s_env <- function(ctx, field) {
 
 # Downward API volume files hold `key="value"` lines.
 k8s_podinfo <- function(ctx, file) {
-  dir <- getOption("fax.k8s.podinfo", "/etc/podinfo")
+  dir <- getOption("zufax.k8s.podinfo", "/etc/podinfo")
   lines <- ctx$read(paste0(dir, "/", file))
   if (is.null(lines)) {
     unavailable(sprintf(
-      "No Downward API file %s/%s; mount one or set `fax.k8s.podinfo`.",
+      "No Downward API file %s/%s; mount one or set `zufax.k8s.podinfo`.",
       dir,
       file
     ))
@@ -38,7 +38,7 @@ not_mapped <- function(field) {
   unavailable(sprintf(
     paste(
       "Not exposed: add a Downward API env var %s or map one with",
-      "`options(fax.k8s.env = c(%s = ...))`."
+      "`options(zufax.k8s.env = c(%s = ...))`."
     ),
     k8s_env_defaults[[field]],
     field

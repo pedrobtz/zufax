@@ -1,4 +1,4 @@
-# Checks fax against real containers, a Kubernetes pod and Python
+# Checks zufax against real containers, a Kubernetes pod and Python
 # environments. The scripts live in tools/live/.
 on:
   push:
@@ -50,21 +50,21 @@ jobs:
         with:
           use-public-rspm: true
 
-      - name: Build fax
+      - name: Build zufax
         run: |
           R CMD build --no-build-vignettes --no-manual .
-          mv fax_*.tar.gz fax.tar.gz
+          mv zufax_*.tar.gz zufax.tar.gz
 
       - name: Build image
         env:
           IMAGE: ${{ matrix.image }}
           SETUP: ${{ matrix.setup }}
         run: |
-          printf 'FROM %s\nRUN %s\nCOPY fax.tar.gz /tmp/\nRUN R CMD INSTALL /tmp/fax.tar.gz\nCOPY tools /tools\n' \
-            "$IMAGE" "$SETUP" | docker build -t fax-live -f - .
+          printf 'FROM %s\nRUN %s\nCOPY zufax.tar.gz /tmp/\nRUN R CMD INSTALL /tmp/zufax.tar.gz\nCOPY tools /tools\n' \
+            "$IMAGE" "$SETUP" | docker build -t zufax-live -f - .
 
       - name: Check inside the container
-        run: docker run --rm ${{ matrix.args }} ${{ matrix.env }} fax-live Rscript /tools/live/check.R
+        run: docker run --rm ${{ matrix.args }} ${{ matrix.env }} zufax-live Rscript /tools/live/check.R
 
   kind:
     runs-on: ubuntu-latest
@@ -73,27 +73,27 @@ jobs:
 
       - uses: r-lib/actions/setup-r@v2
 
-      - name: Build fax
+      - name: Build zufax
         run: |
           R CMD build --no-build-vignettes --no-manual .
-          mv fax_*.tar.gz fax.tar.gz
+          mv zufax_*.tar.gz zufax.tar.gz
 
       - name: Build image
         run: |
-          printf 'FROM rocker/r-ver:4.5\nCOPY fax.tar.gz /tmp/\nRUN R CMD INSTALL /tmp/fax.tar.gz\nCOPY tools /tools\n' |
-            docker build -t fax-live:latest -f - .
+          printf 'FROM rocker/r-ver:4.5\nCOPY zufax.tar.gz /tmp/\nRUN R CMD INSTALL /tmp/zufax.tar.gz\nCOPY tools /tools\n' |
+            docker build -t zufax-live:latest -f - .
 
       - uses: helm/kind-action@v1
         with:
-          cluster_name: fax
+          cluster_name: zufax
 
       - name: Run the pod
         run: |
-          kind load docker-image fax-live:latest --name fax
+          kind load docker-image zufax-live:latest --name zufax
           kubectl apply -f tools/live/pod.yaml
-          kubectl wait --for=jsonpath='{.status.phase}'=Succeeded pod/fax-live --timeout=300s || true
-          kubectl logs pod/fax-live
-          test "$(kubectl get pod fax-live -o jsonpath='{.status.phase}')" = Succeeded
+          kubectl wait --for=jsonpath='{.status.phase}'=Succeeded pod/zufax-live --timeout=300s || true
+          kubectl logs pod/zufax-live
+          test "$(kubectl get pod zufax-live -o jsonpath='{.status.phase}')" = Succeeded
 
   python:
     runs-on: ubuntu-latest
@@ -105,7 +105,7 @@ jobs:
 
       - uses: r-lib/actions/setup-r@v2
 
-      - name: Install fax
+      - name: Install zufax
         run: R CMD INSTALL .
 
       - uses: actions/setup-python@v5
@@ -121,7 +121,7 @@ jobs:
       - uses: conda-incubator/setup-miniconda@v3
         with:
           python-version: "3.11"
-          activate-environment: fax
+          activate-environment: zufax
           auto-activate-base: false
 
       - name: conda

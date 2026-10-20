@@ -1,6 +1,6 @@
-# fax — roadmap to 0.1.0 (first CRAN release)
+# zufax — roadmap to 0.1.0 (first CRAN release)
 
-Companion to [fax-design.md](fax-design.md), which is the source of truth for fact names, formulas and decisions. Section references (§) point there.
+Companion to [zufax-design.md](zufax-design.md), which is the source of truth for fact names, formulas and decisions. Section references (§) point there.
 
 Status: **final** — 2026-10-01 · Progress: Stages 0–9 and 11 done; Stage 10 waiting on the maintainer
 
@@ -14,7 +14,7 @@ A pure-R, zero-dependency package that answers *"where am I running?"*, *"what c
 
 | In 0.1.0 | Deferred |
 |---|---|
-| Engine: resolvers, registry, root-aware readers, `run_cmd()`, `http_get()`, mocks, session cache, opt-in namespaces, `fax.skip` (§4) | Public `register_resolver()`, external facts `facts.d` / `FAX_FACT_*` (0.2.0) |
+| Engine: resolvers, registry, root-aware readers, `run_cmd()`, `http_get()`, mocks, session cache, opt-in namespaces, `zufax.skip` (§4) | Public `register_resolver()`, external facts `facts.d` / `ZUFAX_FACT_*` (0.2.0) |
 | Linux `os`, `cpu` (incl. `isa_level`), `memory` (incl. working set, rlimits), `cgroup` v1/v2/hybrid, effective values (§5.1–5.4, §6) | AWS and GCP IMDS, Azure scheduled events (0.2.0) |
 | `virtualization`, `container` (incl. `pid1`), `k8s` (env + Downward API), WSL (§5.5–5.7) | `facts_duckdb()`, CLI, exported `capture_fixture()` (0.2.0) |
 | `cloud`: provider guess from DMI; Azure platform detection offline; Azure IMDS with `cloud = TRUE` (§5.8) | `disk.mounts`, `network.interfaces`, tmpdir inodes (0.2.0) |
@@ -33,7 +33,7 @@ A pure-R, zero-dependency package that answers *"where am I running?"*, *"what c
 - [x] Add `^\.agents$` to `.Rbuildignore` (otherwise it ends up in the tarball and `R CMD check` notes it).
 - [x] Fill in `DESCRIPTION`: Title, Description, `Authors@R` (**todo:** real name, ORCID if available), `BugReports`, `URL` with the GitHub repo, `Depends: R (>= 4.1.0)`, Suggests per §10.
 - [x] `README.Rmd` stub with the motivation from §1.
-- [x] Check the name `fax` on CRAN, the CRAN archive and r-universe (§12 #1): free as of 2026-10-01.
+- [x] Check the name `zufax` on CRAN, the CRAN archive and r-universe (§12 #1): free as of 2026-10-01.
 - [x] Add a `lintr` config (no CI lint job yet).
 
 **Done when:** `R CMD check` is clean on the empty package in CI.
@@ -49,17 +49,17 @@ Files (suggested): `R/resolver.R`, `R/registry.R`, `R/context.R`, `R/read.R`, `R
 - [x] `resolver()` constructor and validation: `name`, `confine`, `weight`, `depends`, `network`, `resolve` (§4.1). Internal in 0.1.0.
 - [x] Registry: built-ins registered at load time; highest-weight resolver whose `confine` predicates pass wins; `not_applicable` when none pass.
 - [x] Confine predicates on `os` and on other facts' values, evaluated lazily.
-- [x] Namespaces: default vs opt-in (`packages`); `network = TRUE` resolvers run only with `cloud = TRUE` / `fax.cloud`; `fax.skip` blocklist (§4.2). Each case sets `status` and `message`.
+- [x] Namespaces: default vs opt-in (`packages`); `network = TRUE` resolvers run only with `cloud = TRUE` / `zufax.cloud`; `zufax.skip` blocklist (§4.2). Each case sets `status` and `message`.
 - [x] Context `ctx`: `root`, `read()`, `cmd()`, `http()`, `fact()` (dependency resolution, cycle detection).
 - [x] Readers `read_file()`, `read_lines()`, `read_kv()`, `list_dir()`, `file_exists()` with root prefix; `NULL` on missing/unreadable; path recorded as `source` (§4.3).
-- [x] `run_cmd()`: `Sys.which()` check, `system2(timeout = )`, stdout/stderr capture, `fax.cmd_mock` hook.
-- [x] `http_get()` skeleton: URL allowlist, `fax.http_mock` hook (real transport comes in Stage 6).
+- [x] `run_cmd()`: `Sys.which()` check, `system2(timeout = )`, stdout/stderr capture, `zufax.cmd_mock` hook.
+- [x] `http_get()` skeleton: URL allowlist, `zufax.http_mock` hook (real transport comes in Stage 6).
 - [x] Fact record with `value`, `status`, `source`, `resolver`, `elapsed`, `message`; error containment; `strict`.
-- [x] Session cache keyed by fact + root; `refresh = TRUE`; invalidated when `fax.root` changes.
-- [x] `facts()` lazy `fax` object (§4.5) with `$`, `[[`, `names()`, `as.list()`; `fact()`; `facts_df()` with list-column for vector and `df` values.
+- [x] Session cache keyed by fact + root; `refresh = TRUE`; invalidated when `zufax.root` changes.
+- [x] `facts()` lazy `zufax` object (§4.5) with `$`, `[[`, `names()`, `as.list()`; `fact()`; `facts_df()` with list-column for vector and `df` values.
 - [x] Type helpers: bytes, cores, range lists (`0-3,8`), `"max"` → `Inf`, kB/MiB parsing.
 
-Tests: toy resolvers covering weight selection, confinement, opt-in namespaces, network gating, `fax.skip`, dependencies, cycles, error → status, strict, cache/refresh, root switching, command and HTTP mocks.
+Tests: toy resolvers covering weight selection, confinement, opt-in namespaces, network gating, `zufax.skip`, dependencies, cycles, error → status, strict, cache/refresh, root switching, command and HTTP mocks.
 
 **Done when:** a toy resolver set produces a correct `facts_df()` against a fixture root, and errors never escape `facts()` unless strict.
 
@@ -79,10 +79,10 @@ Tests: toy resolvers covering weight selection, confinement, opt-in namespaces, 
 - [x] `effective_cores()` (integer ≥ 1; falls back to `parallel::detectCores()`, then 1) and `effective_memory(what = c("limit", "available"))` (`Inf` → host total).
 
 Fast usage probe (§4.6), built on the same parsers but outside the engine:
-- [x] Static setup cached in a package environment: cgroup dir and available usage files, page size (`/proc/self/auxv` `AT_PAGESZ` via `readBin`, fallback `getconf PAGESIZE` once, fallback 4096), `cpu.effective_exact`, `memory.effective.limit`. Recomputed when the pid or `fax.root` changes.
+- [x] Static setup cached in a package environment: cgroup dir and available usage files, page size (`/proc/self/auxv` `AT_PAGESZ` via `readBin`, fallback `getconf PAGESIZE` once, fallback 4096), `cpu.effective_exact`, `memory.effective.limit`. Recomputed when the pid or `zufax.root` changes.
 - [x] Per-call reads: `proc.time()`, `/proc/self/statm`, cgroup `memory.current` / `memory.usage_in_bytes`, cgroup `cpu.stat` / `cpuacct.usage`. Optional `extra = c("host", "working_set")`.
 - [x] Rates from the previous sample (process CPU, cgroup CPU, throttling); reset after fork; `max_age` reuse.
-- [x] `usage()` returns a named double vector of class `fax_usage`; `format()` / `print()` / `usage_line()`.
+- [x] `usage()` returns a named double vector of class `zufax_usage`; `format()` / `print()` / `usage_line()`.
 - [x] Micro-optimize the readers used here: benchmark `readLines(n = 1)`, `readChar()` and `readBin()` on `/proc` files and use the fastest; `strsplit(fixed = TRUE)`, no regex; never `gc()`.
 - [x] Never errors: every field falls back to `NA`.
 
@@ -103,7 +103,7 @@ Tests: per-fixture expectations on effective values; `expect_snapshot()` of `fac
 - [x] `os.*` from `Sys.info()` and os-release; boot time and uptime; timezone, locale.
 - [x] `virtualization.type/hypervisor` from DMI, cpuinfo `hypervisor` flag, `/sys/hypervisor/type`; `virtualization.wsl`.
 - [x] `container.detected/runtime/id/pid1` from the §5.6 signals; document which signal wins.
-- [x] `k8s.*`: detection, namespace (never the token), Downward API env mapping with defaults (`fax.k8s.env`), labels/annotations volume (`fax.k8s.podinfo`), limits derived from cgroup when not mapped.
+- [x] `k8s.*`: detection, namespace (never the token), Downward API env mapping with defaults (`zufax.k8s.env`), labels/annotations volume (`zufax.k8s.podinfo`), limits derived from cgroup when not mapped.
 - [x] `cloud.provider` from DMI (Azure asset tag / Microsoft + waagent, Amazon EC2, Google Compute Engine).
 
 Fixtures (add, synthetic): `linux-baremetal`, `azure-vm`, `aws-ec2`, `gcp-vm`, `wsl2`, `aks-pod-downward-api`. Rootless podman is covered by the captured `docker-v2-*` fixtures.
@@ -135,7 +135,7 @@ Environment:
 - [x] `disk.tmpdir`: path, fs type, free space.
 
 Outputs:
-- [x] `print.fax()`: substrate line (bare metal / VM / container / pod, cloud, Azure platform), host-vs-effective table for CPU and memory, R and Python versions; human-readable bytes; no `cli` dependency; package counts only if already resolved.
+- [x] `print.zufax()`: substrate line (bare metal / VM / container / pod, cloud, Azure platform), host-vs-effective table for CPU and memory, R and Python versions; human-readable bytes; no `cli` dependency; package counts only if already resolved.
 - [x] `facts_json()` via jsonlite (clear error if missing); `Inf` → `"Inf"`; `metadata = FALSE` default.
 - [x] `format()` / `str()` that don't force resolution.
 
@@ -163,7 +163,7 @@ Tests: parser per manager; malformed entries skipped; `packages` never resolved 
 
 **Done when:** on each CI OS `facts("packages")` returns non-empty system and R inventories, and the Python inventory matches `pip list` in a CI venv.
 
-**Result:** non-empty system and R inventories are asserted on every GitHub Actions OS (`test-packages.R`); the `pip list` comparison moves to the Stage 8 Python job. In an Ubuntu container fax lists 273 dpkg packages in 43 ms, exactly the `ii` entries of `dpkg-query` (the other 29 are removed `rc` packages). Fixtures are inline test roots rather than tarballs. Distroless `status.d/` is supported.
+**Result:** non-empty system and R inventories are asserted on every GitHub Actions OS (`test-packages.R`); the `pip list` comparison moves to the Stage 8 Python job. In an Ubuntu container zufax lists 273 dpkg packages in 43 ms, exactly the `ii` entries of `dpkg-query` (the other 29 are removed `rc` packages). Fixtures are inline test roots rather than tarballs. Distroless `status.d/` is supported.
 
 ---
 
@@ -240,11 +240,11 @@ Tests: recorded command outputs in `tests/testthat/fixtures/cmd/`, run on all OS
 
 ## Stage 9 — Documentation and site
 
-**Goal:** a reader understands what fax reports and why it differs from `detectCores()`.
+**Goal:** a reader understands what zufax reports and why it differs from `detectCores()`.
 
 - [x] roxygen docs and fast, network-free examples for every export (IMDS examples in `\dontrun{}`, noting they need Azure).
 - [x] Fact reference page generated from the registry: name, type, platforms, sources, default/opt-in, `Inf` / `NA` meaning.
-- [x] Vignette `fax`: motivation, host vs effective, containers/k8s walkthrough (output pre-rendered from fixtures), options reference.
+- [x] Vignette `zufax`: motivation, host vs effective, containers/k8s walkthrough (output pre-rendered from fixtures), options reference.
 - [x] Vignette `azure`: offline detection per service, what IMDS adds, the AKS "node, not pod" caveat, what is never read.
 - [x] Article `logging`: `usage_line()` with logger, lgr and `message()`; what each field means; `cpu_throttled` as the signal that a container is CPU-starved; cost per call.
 - [x] Article `inventory`: system / R / Python packages, e.g. attaching an environment report to a bug report or job log.
@@ -253,7 +253,7 @@ Tests: recorded command outputs in `tests/testthat/fixtures/cmd/`, run on all OS
 
 **Done when:** pkgdown builds cleanly and every export has an example.
 
-**Result:** `?fax_facts` is generated from `fact_docs` (type and description of all 118 facts) and the registry (platforms, opt-in, network); a test fails if a fact is undocumented. One CRAN vignette (`fax`: snapshot, status and source, effective cores and memory, a Kubernetes walkthrough pre-rendered from the `k8s-v2-limits` fixture, outputs, options) and three pkgdown-only articles (`azure`, `logging`, `inventory`) under `vignettes/articles/`. README rewritten with a live example and the pod example; knitr and rmarkdown added to Suggests. pkgdown builds cleanly; `R CMD check` clean apart from the NEWS heading note.
+**Result:** `?zufax_facts` is generated from `fact_docs` (type and description of all 118 facts) and the registry (platforms, opt-in, network); a test fails if a fact is undocumented. One CRAN vignette (`zufax`: snapshot, status and source, effective cores and memory, a Kubernetes walkthrough pre-rendered from the `k8s-v2-limits` fixture, outputs, options) and three pkgdown-only articles (`azure`, `logging`, `inventory`) under `vignettes/articles/`. README rewritten with a live example and the pod example; knitr and rmarkdown added to Suggests. pkgdown builds cleanly; `R CMD check` clean apart from the NEWS heading note.
 
 ---
 
@@ -270,7 +270,7 @@ Tests: recorded command outputs in `tests/testthat/fixtures/cmd/`, run on all OS
 - [ ] `devtools::submit_cran()`; confirm maintainer email.
 - [ ] After acceptance: tag `v0.1.0`, GitHub release, bump to `0.1.0.9000`, open the 0.2.0 milestone from the deferred column.
 
-**Done when:** fax 0.1.0 is on CRAN.
+**Done when:** zufax 0.1.0 is on CRAN.
 
 **Progress (2026-10-01):** cran-extrachecks done (Description expands 'cgroup', README has the CRAN install line, `Language: en-US`, US spellings, `inst/WORDLIST`), `urlchecker` clean, spelling clean, `R CMD check --as-cran` 0 errors / 0 warnings, version 0.1.0, `cran-comments.md` written. **Waiting on the maintainer:** the CRAN submission itself.
 

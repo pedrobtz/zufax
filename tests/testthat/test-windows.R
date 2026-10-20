@@ -12,7 +12,7 @@ registry <- list(
 )
 
 local_windows <- function(registry, memory = TRUE, env = parent.frame()) {
-  withr::local_options(fax.os = "windows", .local_envir = env)
+  withr::local_options(zufax.os = "windows", .local_envir = env)
   withr::local_envvar(
     NUMBER_OF_PROCESSORS = "4",
     PROCESSOR_IDENTIFIER = "Intel64 Family 6 Model 106 Stepping 6, GenuineIntel",
@@ -59,7 +59,7 @@ test_that("Azure Windows VMs are recognized by the guest agent directory", {
 
 test_that("Windows without ps reads memory with one PowerShell query", {
   local_windows(registry, memory = FALSE)
-  withr::local_options(fax.cmd_mock = function(cmd, args) {
+  withr::local_options(zufax.cmd_mock = function(cmd, args) {
     if (cmd == "powershell") "16777216 9437184" else NULL
   })
   expect_equal(fact("memory.host.total"), 16 * 1024^3)
@@ -76,7 +76,7 @@ test_that("Windows falls back to PROCESSOR_IDENTIFIER without the registry", {
 
 test_that("Windows Python comes from the py launcher or LOCALAPPDATA", {
   local_python_env()
-  withr::local_options(fax.os = "windows")
+  withr::local_options(zufax.os = "windows")
   local_mocked_bindings(sys_which = function(name) {
     c(
       python3 = "C:\\Users\\u\\AppData\\Local\\Microsoft\\WindowsApps\\python3.exe",
@@ -84,7 +84,7 @@ test_that("Windows Python comes from the py launcher or LOCALAPPDATA", {
     )[name] %|NA|%
       ""
   })
-  withr::local_options(fax.cmd_mock = function(cmd, args) {
+  withr::local_options(zufax.cmd_mock = function(cmd, args) {
     if (identical(args, "-0p")) {
       c(
         " -V:3.13 *        C:\\Python313\\python.exe",

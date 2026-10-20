@@ -1,10 +1,10 @@
 # Resolution state for one facts() call. `memo` holds facts resolved during
 # this call (so `refresh = TRUE` still resolves each fact once); the session
-# cache in `.fax$cache` is shared across calls.
+# cache in `.zufax$cache` is shared across calls.
 new_state <- function(cloud = FALSE, refresh = FALSE, strict = FALSE) {
   state <- new.env(parent = emptyenv())
-  state$root <- fax_root()
-  state$os <- fax_os()
+  state$root <- zufax_root()
+  state$os <- zufax_os()
   state$cloud <- isTRUE(cloud)
   state$refresh <- isTRUE(refresh)
   state$strict <- isTRUE(strict)
@@ -15,8 +15,8 @@ new_state <- function(cloud = FALSE, refresh = FALSE, strict = FALSE) {
   state
 }
 
-fax_os <- function() {
-  getOption("fax.os") %||% .fax$sysname %||% tolower(Sys.info()[["sysname"]])
+zufax_os <- function() {
+  getOption("zufax.os") %||% .zufax$sysname %||% tolower(Sys.info()[["sysname"]])
 }
 
 fact_record <- function(
@@ -50,26 +50,26 @@ resolve_fact <- function(name, state) {
     rec <- fact_record(
       name,
       status = "not_applicable",
-      message = "Skipped by `fax.skip`.",
+      message = "Skipped by `zufax.skip`.",
       cache = FALSE
     )
     return(volatile_to_parent(state, remember(state, name, rec)))
   }
   key <- paste(state$root, state$os, state$cloud, name, sep = "\r")
-  cached <- .fax$cache[[key]]
+  cached <- .zufax$cache[[key]]
   if (!state$refresh && !is.null(cached)) {
     return(remember(state, name, cached))
   }
   if (name %in% state$stack) {
-    fax_abort(
+    zufax_abort(
       "Dependency cycle: %s.",
       paste(c(state$stack, name), collapse = " -> "),
-      class = "fax_cycle"
+      class = "zufax_cycle"
     )
   }
-  candidates <- .fax$resolvers[[name]]
+  candidates <- .zufax$resolvers[[name]]
   if (is.null(candidates)) {
-    fax_abort("Unknown fact `%s`.", name, class = "fax_unknown_fact")
+    zufax_abort("Unknown fact `%s`.", name, class = "zufax_unknown_fact")
   }
 
   depth <- length(state$stack)
@@ -85,7 +85,7 @@ resolve_fact <- function(name, state) {
   }
   # Errors may be transient (and must re-raise under strict), so never cache them.
   if (rec$cache && rec$status != "error") {
-    .fax$cache[[key]] <- rec
+    .zufax$cache[[key]] <- rec
   }
   volatile_to_parent(state, remember(state, name, rec))
 }
@@ -105,7 +105,7 @@ volatile_to_parent <- function(state, rec) {
 }
 
 is_skipped <- function(name) {
-  skip <- getOption("fax.skip")
+  skip <- getOption("zufax.skip")
   length(skip) > 0 && any(name == skip | startsWith(name, paste0(skip, ".")))
 }
 
@@ -167,26 +167,26 @@ run_resolver <- function(r, state) {
   # Resolvers must not be noisy: warnings from the code they call are muffled.
   value <- tryCatch(
     withCallingHandlers(r$resolve(ctx), warning = \(w) invokeRestart("muffleWarning")),
-    fax_unavailable = function(cnd) {
+    zufax_unavailable = function(cnd) {
       status <<- "unavailable"
       message <<- conditionMessage(cnd)
       NULL
     },
-    fax_not_applicable = function(cnd) {
+    zufax_not_applicable = function(cnd) {
       status <<- "not_applicable"
       message <<- conditionMessage(cnd)
       NULL
     },
     error = function(cnd) {
       if (state$strict) {
-        if (inherits(cnd, "fax_resolve_error")) {
+        if (inherits(cnd, "zufax_resolve_error")) {
           stop(cnd)
         }
-        fax_abort(
+        zufax_abort(
           "Failed to resolve fact `%s`: %s",
           r$name,
           conditionMessage(cnd),
-          class = "fax_resolve_error"
+          class = "zufax_resolve_error"
         )
       }
       status <<- "error"

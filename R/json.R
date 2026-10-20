@@ -20,7 +20,7 @@
 #' facts_json(namespaces = "cpu", pretty = TRUE)
 facts_json <- function(x = facts(), namespaces = NULL, pretty = FALSE, metadata = FALSE) {
   if (!requireNamespace("jsonlite", quietly = TRUE)) {
-    fax_abort("`facts_json()` needs the jsonlite package: install.packages(\"jsonlite\").")
+    zufax_abort("`facts_json()` needs the jsonlite package: install.packages(\"jsonlite\").")
   }
   df <- facts_df(x, namespaces)
   values <- lapply(df$value, json_value)

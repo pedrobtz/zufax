@@ -1,6 +1,6 @@
-# fax — design
+# zufax — design
 
-*"fax" — a pun on facts. A small R package that reports OS, hardware, runtime, environment and package facts, and behaves correctly on bare metal, VMs, containers, Kubernetes pods and Azure.*
+*zufax (named fax until 2026-10-20, a pun on facts). A small R package that reports OS, hardware, runtime, environment and package facts, and behaves correctly on bare metal, VMs, containers, Kubernetes pods and Azure.*
 
 Status: **final for 0.1.0** — 2026-10-01. Implementation plan: [roadmap.md](roadmap.md).
 
@@ -12,7 +12,7 @@ Everything in §5 ships in 0.1.0 unless marked *(0.2.0)* or *(later)*.
 
 Existing tools report the **host's** resources, not what the current process is actually allowed to use. Inside a container `parallel::detectCores()` returns the node's 64 cores while the pod is limited to 4; `/proc/meminfo` shows the node's RAM while the cgroup memory limit is 8 GiB. This causes oversubscribed thread pools (future, data.table, BLAS, Spark local mode), OOM kills, and misleading diagnostics.
 
-fax answers three questions reliably, on any substrate:
+zufax answers three questions reliably, on any substrate:
 
 1. **Where am I running?** OS, hardware, virtualization, container, Kubernetes, cloud (Azure first), R and Python runtimes.
 2. **What can I actually use?** Effective CPU and memory, side by side with host values.
@@ -43,7 +43,7 @@ fax answers three questions reliably, on any substrate:
 
 | Source | Borrow |
 |---|---|
-| **Facter** (Ruby) | Hierarchical dotted fact names; resolvers with *confinement* and *weight*; custom & external facts; lazy resolution; `processors.extensions` → `cpu.isa_level`; `identity` → `runtime.uid/privileged`; fact blocklist → `fax.skip`; DMI facts → `dmi.*` *(0.2.0)*; FIPS/SELinux *(0.2.0)* |
+| **Facter** (Ruby) | Hierarchical dotted fact names; resolvers with *confinement* and *weight*; custom & external facts; lazy resolution; `processors.extensions` → `cpu.isa_level`; `identity` → `runtime.uid/privileged`; fact blocklist → `zufax.skip`; DMI facts → `dmi.*` *(0.2.0)*; FIPS/SELinux *(0.2.0)* |
 | **Ohai** (Ruby) | Init detection → `container.pid1`; optional plugins → opt-in namespaces; `packages` and `languages` plugins → `packages.*`, `runtime.python.*`; many-cloud metadata; filesystem inodes → `disk.tmpdir` inodes *(0.2.0)*; hints → external facts *(0.2.0)* |
 | **gopsutil** (Go) | Module-per-facet layout; per-platform implementations behind one interface; virtualization detection; `HOST_PROC`/`HOST_SYS`-style root redirection |
 | **automaxprocs / automemlimit** (Go) | cgroup v1/v2 quota and limit logic |
@@ -54,7 +54,7 @@ fax answers three questions reliably, on any substrate:
 
 **Lesson from Facter's legacy flat names:** fact names are public API from the first CRAN release. They are frozen in this document; any rename after 0.1.0 needs a NEWS entry and a deprecation period.
 
-**Where fax differs from all of the above:** none of them reports what the *current process* may use (cgroup limits, affinity, effective cores/memory), knows Kubernetes pods or the Downward API, or reports per-fact status and source. Only parallelly does the CPU part, in R.
+**Where zufax differs from all of the above:** none of them reports what the *current process* may use (cgroup limits, affinity, effective cores/memory), knows Kubernetes pods or the Downward API, or reports per-fact status and source. Only parallelly does the CPU part, in R.
 
 ## 4. Architecture
 
@@ -66,7 +66,7 @@ facts()  ──►  registry ──► resolvers (per fact, per platform)
              session cache      ctx: read_*() (root-aware) · run_cmd() · http_get() · fact()
                  │
                  ▼
-   outputs: lazy "fax" object · nested list · flat data.frame · JSON
+   outputs: lazy "zufax" object · nested list · flat data.frame · JSON
 ```
 
 ### 4.1 Resolver contract
@@ -93,22 +93,22 @@ Every resolved fact carries metadata:
 | `source` | file / command / env var / URL used (e.g. `/sys/fs/cgroup/memory.max`) |
 | `resolver` | resolver id (built-in, custom, external) |
 | `elapsed` | resolution time |
-| `message` | why a fact is not `ok` (e.g. "skipped by fax.skip", "needs cloud = TRUE") |
+| `message` | why a fact is not `ok` (e.g. "skipped by zufax.skip", "needs cloud = TRUE") |
 
-Errors never propagate from `facts()`; they become `status = "error"` with a message. `strict = TRUE` or `options(fax.strict = TRUE)` re-raises.
+Errors never propagate from `facts()`; they become `status = "error"` with a message. `strict = TRUE` or `options(zufax.strict = TRUE)` re-raises.
 
 ### 4.2 Namespaces: default and opt-in
 
 - **Default:** `os`, `cpu`, `memory`, `cgroup`, `virtualization`, `container`, `k8s`, `cloud` (offline facts), `runtime`, `env`, `disk`. Covered by `print(facts())` and `as.list(facts())`.
 - **Opt-in:** `packages` (heavy) — resolved only when requested by name.
-- **Network facts** (`network = TRUE` resolvers, i.e. IMDS) additionally need `cloud = TRUE` or `options(fax.cloud = TRUE)`; otherwise `not_applicable` with message "needs cloud = TRUE".
-- **Blocklist:** `options(fax.skip = c(...))` skips facts or whole namespaces.
+- **Network facts** (`network = TRUE` resolvers, i.e. IMDS) additionally need `cloud = TRUE` or `options(zufax.cloud = TRUE)`; otherwise `not_applicable` with message "needs cloud = TRUE".
+- **Blocklist:** `options(zufax.skip = c(...))` skips facts or whole namespaces.
 
 ### 4.3 I/O through three wrappers
 
-- **Files:** readers (`read_file()`, `read_lines()`, `read_kv()`, `list_dir()`, `file_exists()`) prefix the root `getOption("fax.root", Sys.getenv("FAX_ROOT", "/"))` and return `NULL` on missing/unreadable files. Enables fixture-based tests and inspecting a host mounted into a debug container (`/host`).
-- **Commands:** `run_cmd()` — `Sys.which()` check, `system2(timeout = )`, mock hook `options(fax.cmd_mock = )`.
-- **HTTP:** `http_get()` — used only by IMDS resolvers; fixed URL allowlist, 1 s timeout, no retries, no redirects, proxy bypassed for link-local addresses, mock hook `options(fax.http_mock = )`.
+- **Files:** readers (`read_file()`, `read_lines()`, `read_kv()`, `list_dir()`, `file_exists()`) prefix the root `getOption("zufax.root", Sys.getenv("ZUFAX_ROOT", "/"))` and return `NULL` on missing/unreadable files. Enables fixture-based tests and inspecting a host mounted into a debug container (`/host`).
+- **Commands:** `run_cmd()` — `Sys.which()` check, `system2(timeout = )`, mock hook `options(zufax.cmd_mock = )`.
+- **HTTP:** `http_get()` — used only by IMDS resolvers; fixed URL allowlist, 1 s timeout, no retries, no redirects, proxy bypassed for link-local addresses, mock hook `options(zufax.http_mock = )`.
 
 ### 4.4 Precedence
 
@@ -116,13 +116,13 @@ Errors never propagate from `facts()`; they become `status = "error"` with a mes
 
 ### 4.5 Snapshot object
 
-`facts()` returns an environment-backed object of class `fax`. Namespaces resolve lazily on `$`/`[[` access and are cached for the session; `facts(c("cpu", "memory"))` resolves the listed namespaces eagerly. `as.list()` forces the default namespaces only. `refresh = TRUE` bypasses the cache; the cache is keyed by fact, root, OS and `cloud`, so changing `fax.root` gives fresh values. Records with `status = "error"` are never cached (errors may be transient, and `strict = TRUE` must be able to re-raise them). Resolvers that read environment variables or options are declared `cache = FALSE`, and any fact that consults an uncached fact (through `ctx$fact()` or `confine`) is not cached either. Values that come from the live R session rather than the root (`Sys.info()`, `Sys.timezone()`) record that as their `source`.
+`facts()` returns an environment-backed object of class `zufax`. Namespaces resolve lazily on `$`/`[[` access and are cached for the session; `facts(c("cpu", "memory"))` resolves the listed namespaces eagerly. `as.list()` forces the default namespaces only. `refresh = TRUE` bypasses the cache; the cache is keyed by fact, root, OS and `cloud`, so changing `zufax.root` gives fresh values. Records with `status = "error"` are never cached (errors may be transient, and `strict = TRUE` must be able to re-raise them). Resolvers that read environment variables or options are declared `cache = FALSE`, and any fact that consults an uncached fact (through `ctx$fact()` or `confine`) is not cached either. Values that come from the live R session rather than the root (`Sys.info()`, `Sys.timezone()`) record that as their `source`.
 
 ### 4.6 Fast usage probe
 
 `usage()` reports current CPU and memory use cheaply enough to call on every log line. It **bypasses the registry, metadata and fact cache**; it shares only the parsers.
 
-**Static part, computed once** per session (recomputed when `Sys.getpid()` or `fax.root` changes): cgroup directory and which usage files exist, page size (from `/proc/self/auxv` `AT_PAGESZ`, fallback one `getconf PAGESIZE`, fallback 4096), `cpu.effective`, `memory.effective.limit`.
+**Static part, computed once** per session (recomputed when `Sys.getpid()` or `zufax.root` changes): cgroup directory and which usage files exist, page size (from `/proc/self/auxv` `AT_PAGESZ`, fallback one `getconf PAGESIZE`, fallback 4096), `cpu.effective`, `memory.effective.limit`.
 
 **Dynamic part, per call:**
 
@@ -135,7 +135,7 @@ Errors never propagate from `facts()`; they become `status = "error"` with a mes
 
 Optional per call, `extra = c("host", "working_set")`: `/proc/meminfo` (host available) and `memory.stat` (working set). Off by default because they are larger files.
 
-**Fields** (named double vector, class `fax_usage`):
+**Fields** (named double vector, class `zufax_usage`):
 
 | field | meaning |
 |---|---|
@@ -151,7 +151,7 @@ Optional per call, `extra = c("host", "working_set")`: `/proc/meminfo` (host ava
 
 **Rules:** no commands or network per call; never `gc()` (it triggers a collection); no regex, no data frames, no metadata; never errors (fields become `NA`); the previous sample lives in a package environment and is reset after `fork()` (pid change). `max_age` (seconds) returns the cached sample if it is younger, for hot loops.
 
-**Formatting:** `format.fax_usage()` and `usage_line()` give a compact string for log messages, e.g. `cpu=1.8/4 thr=3% mem=2.1G/8G(26%) rss=1.2G`. No dependency on any logging package; works inline with logger (`log_info("done {usage_line()}")`), lgr (custom field) or `message()`.
+**Formatting:** `format.zufax_usage()` and `usage_line()` give a compact string for log messages, e.g. `cpu=1.8/4 thr=3% mem=2.1G/8G(26%) rss=1.2G`. No dependency on any logging package; works inline with logger (`log_info("done {usage_line()}")`), lgr (custom field) or `message()`.
 
 **macOS / Windows:** process CPU from `proc.time()`; `mem_rss` from `ps::ps_memory_info()` when `ps` is installed (compiled, microseconds), else `NA`; container fields `NA`.
 
@@ -232,8 +232,8 @@ Types: `chr`, `int`, `dbl`, `lgl`, `bytes` (double, since R integers are 32-bit)
 | `k8s.detected` | `KUBERNETES_SERVICE_HOST` set **or** service-account dir exists |
 | `k8s.namespace` | `/var/run/secrets/kubernetes.io/serviceaccount/namespace` (never read the token) |
 | `k8s.pod.name` | Downward API env if mapped, else hostname |
-| `k8s.node.name`, `k8s.pod.ip`, `k8s.pod.uid` (uid also from `/var/lib/kubelet/pods/<uid>/` mount roots) | Downward API env; mapping configurable via `options(fax.k8s.env = c(node.name = "NODE_NAME", pod.ip = "POD_IP", pod.uid = "POD_UID", pod.name = "POD_NAME"))` (these are the defaults) |
-| `k8s.pod.labels`, `k8s.pod.annotations` | Downward API volume files, path `options(fax.k8s.podinfo = "/etc/podinfo")` |
+| `k8s.node.name`, `k8s.pod.ip`, `k8s.pod.uid` (uid also from `/var/lib/kubelet/pods/<uid>/` mount roots) | Downward API env; mapping configurable via `options(zufax.k8s.env = c(node.name = "NODE_NAME", pod.ip = "POD_IP", pod.uid = "POD_UID", pod.name = "POD_NAME"))` (these are the defaults) |
+| `k8s.pod.labels`, `k8s.pod.annotations` | Downward API volume files, path `options(zufax.k8s.podinfo = "/etc/podinfo")` |
 | `k8s.resources.requests/limits` | Downward API `resourceFieldRef` env if mapped; otherwise limits derived from cgroup |
 
 ### 5.8 `cloud`
@@ -286,13 +286,13 @@ Python:
 | fact | notes |
 |---|---|
 | `runtime.python.path`, `.version`, `.implementation`, `.prefix`, `.env_type`, `.env_path`, `.site_packages` | discovery: `RETICULATE_PYTHON` → `VIRTUAL_ENV` → `CONDA_PREFIX` → `python3` → `python` (Windows also the `py` launcher); read `pyvenv.cfg` / `conda-meta/` first, else **one** probe command printing JSON (5 s timeout). `env_type`: `venv` · `uv` · `conda` · `system` |
-| `runtime.python.reticulate` | interpreter bound by reticulate, **only** if reticulate is loaded and Python already initialized; fax never initializes Python |
+| `runtime.python.reticulate` | interpreter bound by reticulate, **only** if reticulate is loaded and Python already initialized; zufax never initializes Python |
 
 ### 5.10 `env`
 | fact | notes |
 |---|---|
 | `env.vars` | named chr, **redacted by default**: names matching `(?i)(key|token|secret|password|passwd|credential|auth|conn(ection)?_?str|sas|header|(^|_)pat($|_))` → `"<redacted>"`; any value that is a URL with `user:pass@` has the userinfo stripped |
-| modes | `options(fax.redact = "default")` · `"allowlist"` (only names in `fax.redact_allowlist`) · `"none"` (explicit opt-in) |
+| modes | `options(zufax.redact = "default")` · `"allowlist"` (only names in `zufax.redact_allowlist`) · `"none"` (explicit opt-in) |
 | `env.proxies` | `http_proxy`, `https_proxy`, `no_proxy` (userinfo stripped) |
 
 ### 5.11 `disk`, `network`
@@ -359,33 +359,33 @@ print(f)                                  # substrate summary + host vs effectiv
 effective_cores()                         # integer >= 1, safe default for thread pools
 effective_memory(what = c("limit", "available"))  # bytes (double)
 
-usage(extra = NULL, max_age = 0)          # fast CPU/memory usage probe (§4.6), class "fax_usage"
+usage(extra = NULL, max_age = 0)          # fast CPU/memory usage probe (§4.6), class "zufax_usage"
 usage_line(...)                           # compact string for log lines
 ```
 
-S3 methods: `print`, `format`, `as.list`, `$`, `[[`, `names` for class `fax`; `print`, `format` for class `fax_usage`.
+S3 methods: `print`, `format`, `as.list`, `$`, `[[`, `names` for class `zufax`; `print`, `format` for class `zufax_usage`.
 
-Options: `fax.root` (env `FAX_ROOT`), `fax.strict`, `fax.skip`, `fax.cloud`, `fax.redact`, `fax.redact_allowlist`, `fax.k8s.env`, `fax.k8s.podinfo`; testing only (documented as internal): `fax.os` (pretend to be another OS, e.g. to run Linux fixtures on macOS), `fax.cmd_mock`, `fax.http_mock`.
+Options: `zufax.root` (env `ZUFAX_ROOT`), `zufax.strict`, `zufax.skip`, `zufax.cloud`, `zufax.redact`, `zufax.redact_allowlist`, `zufax.k8s.env`, `zufax.k8s.podinfo`; testing only (documented as internal): `zufax.os` (pretend to be another OS, e.g. to run Linux fixtures on macOS), `zufax.cmd_mock`, `zufax.http_mock`.
 
 *(0.2.0)*:
 
 ```r
 register_resolver(...)                    # custom facts
 external_facts(dirs = facts_d_dirs())     # facts.d: *.json / *.yaml / *.txt (k=v) / executables (opt-in)
-# env external facts: FAX_FACT_<name>=value
+# env external facts: ZUFAX_FACT_<name>=value
 facts_duckdb(con, f)                      # CREATE VIEW per namespace
 capture_fixture(path)                     # tar the relevant /proc,/sys,/etc files (redacted)
-fax::main()                               # CLI: fax [namespace...] --json
+zufax::main()                               # CLI: zufax [namespace...] --json
 ```
 
 ## 8. Testing strategy
 
-- **Fixture trees** in `data-raw/fixtures/<scenario>/` mirroring `/proc`, `/sys`, `/etc`, `/var/lib`, packed by `data-raw/pack-fixtures.R` into `tests/testthat/fixtures/<scenario>.tar.gz` (R CMD build rejects paths over 100 bytes and flags hidden files like `run/.containerenv`). Tests extract them, set `fax.root` and `fax.os`, and snapshot a per-fact report; a source-only test checks tarballs and trees are in sync. Real captures come from `data-raw/capture-fixture.sh` (cgroup v2 via podman); v1, hybrid, a parent-limited k8s pod and LXCFS are written by `data-raw/synthetic-fixtures.R`.
+- **Fixture trees** in `data-raw/fixtures/<scenario>/` mirroring `/proc`, `/sys`, `/etc`, `/var/lib`, packed by `data-raw/pack-fixtures.R` into `tests/testthat/fixtures/<scenario>.tar.gz` (R CMD build rejects paths over 100 bytes and flags hidden files like `run/.containerenv`). Tests extract them, set `zufax.root` and `zufax.os`, and snapshot a per-fact report; a source-only test checks tarballs and trees are in sync. Real captures come from `data-raw/capture-fixture.sh` (cgroup v2 via podman); v1, hybrid, a parent-limited k8s pod and LXCFS are written by `data-raw/synthetic-fixtures.R`.
   - Resources: bare-metal Linux · Docker v1 `--cpus=1.5 --memory=512m` · Docker v2 unlimited · Docker v2 `--cpus=2 --memory=1g` · k8s pod v2 with parent limit · cpuset-pinned · LXCFS · hybrid.
   - Substrate: Azure VM · AWS EC2 · GCP VM · WSL2 · rootless Podman · AKS pod with Downward API.
   - Runtime/packages: venv, conda prefix, site-packages with dist-info/egg-info; dpkg status, apk db, pacman local, Homebrew Cellar.
 - An internal capture helper builds fixtures from real machines, copying only files resolvers read; redact before committing.
-- **Command mocks** (`fax.cmd_mock`): macOS `sysctl`/`sw_vers`/`vm_stat`, Windows PowerShell, `rpm -qa`, the Python probe. **Registry mock** for Windows packages. **HTTP mock** (`fax.http_mock`): recorded Azure IMDS response with IDs/IPs replaced.
+- **Command mocks** (`zufax.cmd_mock`): macOS `sysctl`/`sw_vers`/`vm_stat`, Windows PowerShell, `rpm -qa`, the Python probe. **Registry mock** for Windows packages. **HTTP mock** (`zufax.http_mock`): recorded Azure IMDS response with IDs/IPs replaced.
 - **Live CI** (GitHub Actions): ubuntu/macos/windows matrix (invariants only); Docker job (`--cpus`, `--memory`, `--cpuset-cpus`) in Debian, Alpine and Fedora images; `kind` pod with limits and Downward API; Python venv/conda vs `pip list`; IMDS on the Azure-hosted runner if reachable.
 - Cross-check `cpu.effective` against `parallelly::availableCores()` where both apply.
 - Safety tests: no network unless `cloud = TRUE`; IMDS URL allowlist; reticulate never initialized; redaction table.
@@ -401,7 +401,7 @@ fax::main()                               # CLI: fax [namespace...] --json
 - Never start Python inside the R session.
 - Redaction of env vars, proxy and repo URLs, Azure tags.
 - No writes outside `tempdir()`.
-- External-fact executables disabled unless `options(fax.exec_external = TRUE)` *(0.2.0)*.
+- External-fact executables disabled unless `options(zufax.exec_external = TRUE)` *(0.2.0)*.
 
 ## 10. Packaging (CRAN)
 
@@ -423,8 +423,8 @@ fax::main()                               # CLI: fax [namespace...] --json
 
 | # | Question | Decision |
 |---|---|---|
-| 1 | Name | **fax** — never on CRAN incl. archive (checked 2026-10-01); check GitHub / r-universe before submission. |
-| 2 | Snapshot object | Environment-backed lazy `fax` object (§4.5). |
+| 1 | Name | **zufax** — never on CRAN incl. archive (checked 2026-10-01); check GitHub / r-universe before submission. |
+| 2 | Snapshot object | Environment-backed lazy `zufax` object (§4.5). |
 | 3 | "No limit" | `Inf` in R; the string `"Inf"` in JSON (documented). `NA` always means unknown. |
 | 4 | `memory.high` in effective memory | No; reported separately as a soft limit. |
 | 5 | `ps` | No process facts. `ps` only in Suggests as a faster Windows memory source. |

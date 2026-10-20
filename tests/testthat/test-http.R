@@ -10,7 +10,7 @@ test_that("http_get() only allows the instance metadata endpoint", {
 
 test_that("http_get() refuses URLs off the allowlist before any request", {
   called <- FALSE
-  withr::local_options(fax.http_mock = function(url, headers) {
+  withr::local_options(zufax.http_mock = function(url, headers) {
     called <<- TRUE
     list(status = 200L, body = "{}")
   })
@@ -22,7 +22,7 @@ test_that("http_get() refuses URLs off the allowlist before any request", {
 })
 
 test_that("http_get() uses the mock hook", {
-  withr::local_options(fax.http_mock = function(url, headers) {
+  withr::local_options(zufax.http_mock = function(url, headers) {
     list(status = 200L, body = headers[["Metadata"]])
   })
   out <- http_get(

@@ -23,7 +23,7 @@ old, for very hot loops.}
 \item{...}{Passed on to \code{usage()}.}
 }
 \value{
-\code{usage()}: a named numeric vector of class \code{fax_usage} with
+\code{usage()}: a named numeric vector of class \code{zufax_usage} with
 \itemize{
 \item \code{time}: when the sample was taken, as seconds since the epoch.
 \item \code{cpu_process}: CPU cores used by this R process since the previous call.

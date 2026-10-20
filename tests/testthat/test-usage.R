@@ -5,7 +5,7 @@ test_that("usage() reports container usage and rates between calls", {
   local_mocked_bindings(usage_now = function() clock)
 
   u1 <- usage()
-  expect_s3_class(u1, "fax_usage")
+  expect_s3_class(u1, "zufax_usage")
   expect_equal(u1[["cpu_process"]], 0.1)
   expect_equal(u1[["cpu_cgroup"]], NA_real_)
   expect_equal(u1[["cpu_limit"]], 1.5)
@@ -81,7 +81,7 @@ test_that("usage() extras add host and working set memory", {
 test_that("usage() never errors when files are missing", {
   local_usage_reset()
   local_root()
-  withr::local_options(fax.os = "linux")
+  withr::local_options(zufax.os = "linux")
   u <- usage()
   expect_equal(u[["mem_rss"]], NA_real_)
   expect_equal(u[["mem_cgroup"]], NA_real_)
@@ -108,7 +108,7 @@ test_that("format() gives a compact log line", {
       mem_limit = 8 * 1024^3,
       mem_pct = 2.1 / 8
     ),
-    class = "fax_usage"
+    class = "zufax_usage"
   )
   expect_snapshot(print(u))
   host <- u
@@ -173,7 +173,7 @@ test_that("format() handles percentages beyond the integer range", {
       mem_limit = 1024,
       mem_pct = 1e23
     ),
-    class = "fax_usage"
+    class = "zufax_usage"
   )
   expect_match(format(u), "thr=1000000000000% mem=", fixed = TRUE)
   u[["mem_pct"]] <- Inf
@@ -185,6 +185,6 @@ test_that("a broken cgroup layout only disables the container fields", {
   root <- local_fixture_copy("docker-v2-cpus1.5-mem512m")
   local_mocked_bindings(read_cgroup_layout = function(ctx) stop("broken"))
   u <- usage()
-  expect_s3_class(u, "fax_usage")
+  expect_s3_class(u, "zufax_usage")
   expect_equal(u[["mem_cgroup"]], NA_real_)
 })
