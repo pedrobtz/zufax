@@ -36,7 +36,7 @@ usage_line(...)
 
 ## Value
 
-`usage()`: a named numeric vector of class `fax_usage` with
+`usage()`: a named numeric vector of class `zufax_usage` with
 
 - `time`: when the sample was taken, as seconds since the epoch.
 
@@ -50,14 +50,14 @@ usage_line(...)
   call in which the container was throttled for hitting its CPU quota.
 
 - `cpu_limit`: CPU cores the process may use (see
-  [`effective_cores()`](https://pedrobtz.github.io/fax/reference/effective_cores.md)).
+  [`effective_cores()`](https://pedrobtz.github.io/zufax/reference/effective_cores.md)).
 
 - `mem_rss`: resident memory of this process, in bytes.
 
 - `mem_cgroup`: memory used by the container, including page cache.
 
 - `mem_limit`: the memory limit (see
-  [`effective_memory()`](https://pedrobtz.github.io/fax/reference/effective_cores.md)).
+  [`effective_memory()`](https://pedrobtz.github.io/zufax/reference/effective_cores.md)).
 
 - `mem_pct`: `mem_cgroup / mem_limit`, or `mem_rss` as a share of host
   memory when there is no container.
@@ -81,7 +81,7 @@ fields are always `NA`.
 
 ``` r
 usage()
-#> cpu=0.6/4 mem=2.6G/15.6G(16%) rss=152.2M
+#> cpu=0.5/4 mem=2.6G/15.6G(17%) rss=152.9M
 message("step done ", usage_line())
-#> step done cpu=1.2/4 thr=0% mem=2.6G/15.6G(16%) rss=152.2M
+#> step done cpu=0.7/4 thr=0% mem=2.6G/15.6G(17%) rss=152.9M
 ```

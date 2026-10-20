@@ -3,10 +3,10 @@ pkgdown: 2.2.1
 pkgdown_sha: ~
 articles:
   articles/azure: azure.html
-  fax: fax.html
   articles/inventory: inventory.html
   articles/logging: logging.html
-last_built: 2026-10-05T12:39Z
+  zufax: zufax.html
+last_built: 2026-10-20T13:11Z
 urls:
-  reference: https://pedrobtz.github.io/fax/reference
-  article: https://pedrobtz.github.io/fax/articles
+  reference: https://pedrobtz.github.io/zufax/reference
+  article: https://pedrobtz.github.io/zufax/articles

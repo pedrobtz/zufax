@@ -7,15 +7,15 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/pedrobtz/fax/blob/main/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/pedrobtz/zufax/blob/main/DESCRIPTION)
 
-Baltazar P (2026). *fax: Facts About the Host, Container and Runtime*. R
-package version 0.1.0, <https://pedrobtz.github.io/fax/>.
+Baltazar P (2026). *zufax: Facts About the Host, Container and Runtime*.
+R package version 0.1.0, <https://pedrobtz.github.io/zufax/>.
 
     @Manual{,
-      title = {fax: Facts About the Host, Container and Runtime},
+      title = {zufax: Facts About the Host, Container and Runtime},
       author = {Pedro Baltazar},
       year = {2026},
       note = {R package version 0.1.0},
-      url = {https://pedrobtz.github.io/fax/},
+      url = {https://pedrobtz.github.io/zufax/},
     }

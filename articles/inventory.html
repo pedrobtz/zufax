@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Installed packages • fax</title>
+<title>Installed packages • zufax</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
@@ -18,7 +18,7 @@
 
     <nav class="navbar navbar-expand-lg fixed-top bg-light" data-bs-theme="light" aria-label="Site navigation"><div class="container">
 
-    <a class="navbar-brand me-2" href="../index.html">fax</a>
+    <a class="navbar-brand me-2" href="../index.html">zufax</a>
 
     <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
 
@@ -29,7 +29,7 @@
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
-<li class="nav-item"><a class="nav-link" href="../articles/fax.html">Get started</a></li>
+<li class="nav-item"><a class="nav-link" href="../articles/zufax.html">Get started</a></li>
 <li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="active nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
@@ -45,7 +45,7 @@
 <li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json">
 </form></li>
-<li class="nav-item"><a class="external-link nav-link" href="https://github.com/pedrobtz/fax/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/pedrobtz/zufax/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul>
 </div>
 
@@ -62,7 +62,7 @@
       <h1>Installed packages</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/pedrobtz/fax/blob/main/vignettes/articles/inventory.Rmd" class="external-link"><code>vignettes/articles/inventory.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/pedrobtz/zufax/blob/main/vignettes/articles/inventory.Rmd" class="external-link"><code>vignettes/articles/inventory.Rmd</code></a></small>
       <div class="d-none name"><code>inventory.Rmd</code></div>
     </div>
 
@@ -74,12 +74,12 @@ lists can be long: it is left out of <code>print(facts())</code>,
 <code><a href="https://rdrr.io/r/base/list.html" class="external-link">as.list()</a></code> and <code><a href="../reference/facts_df.html">facts_df()</a></code> unless you ask for
 it.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://pedrobtz.github.io/fax/">fax</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://pedrobtz.github.io/zufax/">zufax</a></span><span class="op">)</span></span>
 <span><span class="va">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/facts.html">facts</a></span><span class="op">(</span><span class="st">"packages"</span><span class="op">)</span></span>
 <span><span class="va">f</span><span class="op">[[</span><span class="st">"packages.system.manager"</span><span class="op">]</span><span class="op">]</span></span>
 <span><span class="co">#&gt; [1] "dpkg"</span></span>
 <span><span class="va">f</span><span class="op">[[</span><span class="st">"packages.system.count"</span><span class="op">]</span><span class="op">]</span></span>
-<span><span class="co">#&gt; [1] 1435</span></span>
+<span><span class="co">#&gt; [1] 1437</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">f</span><span class="op">[[</span><span class="st">"packages.r"</span><span class="op">]</span><span class="op">]</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"name"</span>, <span class="st">"version"</span>, <span class="st">"source"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="co">#&gt;        name version   source</span></span>
 <span><span class="co">#&gt; 1   askpass   1.2.1 standard</span></span>
@@ -124,7 +124,7 @@ directories in the Python environment’s site-packages, plus
 </tr>
 </tbody>
 </table>
-<p>fax never runs <code>pip</code>, <code>conda</code>,
+<p>zufax never runs <code>pip</code>, <code>conda</code>,
 <code>brew</code> or <code>apt</code>, and never starts Python inside R.
 Python is found through <code>RETICULATE_PYTHON</code>,
 <code>VIRTUAL_ENV</code>, <code>CONDA_PREFIX</code> or the

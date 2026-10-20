@@ -42,7 +42,7 @@ if you want those honored.
 
 ## See also
 
-[`facts()`](https://pedrobtz.github.io/fax/reference/facts.md) for the
+[`facts()`](https://pedrobtz.github.io/zufax/reference/facts.md) for the
 individual limits behind these values, e.g. `facts()$cpu` and
 `facts()$memory`.
 
@@ -52,5 +52,5 @@ individual limits behind these values, e.g. `facts()$cpu` and
 effective_cores()
 #> [1] 4
 effective_memory()
-#> [1] 16766414848
+#> [1] 16760340480
 ```

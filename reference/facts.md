@@ -9,9 +9,9 @@ cached for the rest of the session.
 ``` r
 facts(
   namespaces = NULL,
-  cloud = getOption("fax.cloud", FALSE),
+  cloud = getOption("zufax.cloud", FALSE),
   refresh = FALSE,
-  strict = getOption("fax.strict", FALSE)
+  strict = getOption("zufax.strict", FALSE)
 )
 ```
 
@@ -25,7 +25,7 @@ facts(
 - cloud:
 
   Allow network requests to the cloud instance metadata service.
-  Defaults to the `fax.cloud` option, else `FALSE`.
+  Defaults to the `zufax.cloud` option, else `FALSE`.
 
 - refresh:
 
@@ -34,11 +34,12 @@ facts(
 - strict:
 
   If `TRUE`, re-raise errors from resolvers instead of recording them as
-  `status = "error"`. Defaults to the `fax.strict` option, else `FALSE`.
+  `status = "error"`. Defaults to the `zufax.strict` option, else
+  `FALSE`.
 
 ## Value
 
-An object of class `fax`:
+An object of class `zufax`:
 
 - `x$cpu` or `x[["cpu"]]` returns a namespace as a nested list of
   values.
@@ -57,19 +58,19 @@ Facts are grouped in namespaces (`os`, `cpu`, `memory`, ...). The
 `packages` namespace is opt-in: it is only resolved when you ask for it
 by name, and is left out of
 [`as.list()`](https://rdrr.io/r/base/list.html) and
-[`facts_df()`](https://pedrobtz.github.io/fax/reference/facts_df.md)
+[`facts_df()`](https://pedrobtz.github.io/zufax/reference/facts_df.md)
 otherwise.
 
 Resolution never fails: a fact that cannot be determined has value `NA`
 and a `status` other than `"ok"`, visible with
-[`facts_df()`](https://pedrobtz.github.io/fax/reference/facts_df.md).
+[`facts_df()`](https://pedrobtz.github.io/zufax/reference/facts_df.md).
 
 ## See also
 
-[`fact()`](https://pedrobtz.github.io/fax/reference/fact.md) for a
+[`fact()`](https://pedrobtz.github.io/zufax/reference/fact.md) for a
 single value,
-[`facts_df()`](https://pedrobtz.github.io/fax/reference/facts_df.md) for
-values with their status and source.
+[`facts_df()`](https://pedrobtz.github.io/zufax/reference/facts_df.md)
+for values with their status and source.
 
 ## Examples
 

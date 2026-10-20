@@ -7,9 +7,9 @@ Get the value of a single fact
 ``` r
 fact(
   name,
-  cloud = getOption("fax.cloud", FALSE),
+  cloud = getOption("zufax.cloud", FALSE),
   refresh = FALSE,
-  strict = getOption("fax.strict", FALSE)
+  strict = getOption("zufax.strict", FALSE)
 )
 ```
 
@@ -22,7 +22,7 @@ fact(
 - cloud:
 
   Allow network requests to the cloud instance metadata service.
-  Defaults to the `fax.cloud` option, else `FALSE`.
+  Defaults to the `zufax.cloud` option, else `FALSE`.
 
 - refresh:
 
@@ -31,7 +31,8 @@ fact(
 - strict:
 
   If `TRUE`, re-raise errors from resolvers instead of recording them as
-  `status = "error"`. Defaults to the `fax.strict` option, else `FALSE`.
+  `status = "error"`. Defaults to the `zufax.strict` option, else
+  `FALSE`.
 
 ## Value
 
@@ -39,7 +40,7 @@ The fact's value, or `NA` if it could not be determined.
 
 ## See also
 
-[`facts()`](https://pedrobtz.github.io/fax/reference/facts.md) for a
+[`facts()`](https://pedrobtz.github.io/zufax/reference/facts.md) for a
 lazy snapshot of many facts.
 
 ## Examples

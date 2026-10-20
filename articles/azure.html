@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Azure • fax</title>
+<title>Azure • zufax</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
@@ -18,7 +18,7 @@
 
     <nav class="navbar navbar-expand-lg fixed-top bg-light" data-bs-theme="light" aria-label="Site navigation"><div class="container">
 
-    <a class="navbar-brand me-2" href="../index.html">fax</a>
+    <a class="navbar-brand me-2" href="../index.html">zufax</a>
 
     <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
 
@@ -29,7 +29,7 @@
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
-<li class="nav-item"><a class="nav-link" href="../articles/fax.html">Get started</a></li>
+<li class="nav-item"><a class="nav-link" href="../articles/zufax.html">Get started</a></li>
 <li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="active nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
@@ -45,7 +45,7 @@
 <li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json">
 </form></li>
-<li class="nav-item"><a class="external-link nav-link" href="https://github.com/pedrobtz/fax/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/pedrobtz/zufax/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul>
 </div>
 
@@ -62,13 +62,13 @@
       <h1>Azure</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/pedrobtz/fax/blob/main/vignettes/articles/azure.Rmd" class="external-link"><code>vignettes/articles/azure.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/pedrobtz/zufax/blob/main/vignettes/articles/azure.Rmd" class="external-link"><code>vignettes/articles/azure.Rmd</code></a></small>
       <div class="d-none name"><code>azure.Rmd</code></div>
     </div>
 
     
     
-<p>fax recognizes Azure without network access, and with
+<p>zufax recognizes Azure without network access, and with
 <code>cloud = TRUE</code> reads the instance metadata service (IMDS) for
 details such as region and VM size.</p>
 <div class="section level2">
@@ -132,7 +132,7 @@ node, job and task.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/facts.html">facts</a></span><span class="op">(</span>cloud <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="va">f</span></span>
-<span><span class="co">#&gt; &lt;fax facts&gt;</span></span>
+<span><span class="co">#&gt; &lt;zufax facts&gt;</span></span>
 <span><span class="co">#&gt; os       Ubuntu 24.04</span></span>
 <span><span class="co">#&gt; runs in  Kubernetes pod analytics/spark-driver-7d9f-xk2lp, containerd container</span></span>
 <span><span class="co">#&gt; runs on  vm (hyperv), cloud azure (aks), node westeurope Standard_D4s_v5</span></span>
@@ -155,12 +155,12 @@ environment variables.</p>
 the pod: the summary says <code>node</code> to make that clear.</p>
 </div>
 <div class="section level2">
-<h2 id="what-fax-does-and-does-not-do">What fax does and does not do<a class="anchor" aria-label="anchor" href="#what-fax-does-and-does-not-do"></a>
+<h2 id="what-zufax-does-and-does-not-do">What zufax does and does not do<a class="anchor" aria-label="anchor" href="#what-zufax-does-and-does-not-do"></a>
 </h2>
 <ul>
 <li>No request is made without <code>cloud = TRUE</code> (or
-<code>options(fax.cloud = TRUE)</code>), and none off Azure: the offline
-check comes first.</li>
+<code>options(zufax.cloud = TRUE)</code>), and none off Azure: the
+offline check comes first.</li>
 <li>Exactly one URL can be requested:
 <code>http://169.254.169.254/metadata/instance?api-version=2021-02-01</code>.
 The managed identity endpoints (<code>/metadata/identity/...</code>)

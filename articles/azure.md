@@ -1,6 +1,6 @@
 # Azure
 
-fax recognizes Azure without network access, and with `cloud = TRUE`
+zufax recognizes Azure without network access, and with `cloud = TRUE`
 reads the instance metadata service (IMDS) for details such as region
 and VM size.
 
@@ -34,7 +34,7 @@ task.
 
 f <- facts(cloud = TRUE)
 f
-#> <fax facts>
+#> <zufax facts>
 #> os       Ubuntu 24.04
 #> runs in  Kubernetes pod analytics/spark-driver-7d9f-xk2lp, containerd container
 #> runs on  vm (hyperv), cloud azure (aks), node westeurope Standard_D4s_v5
@@ -59,10 +59,10 @@ variables.
 In a pod, the metadata describes the **node VM**, not the pod: the
 summary says `node` to make that clear.
 
-## What fax does and does not do
+## What zufax does and does not do
 
 - No request is made without `cloud = TRUE` (or
-  `options(fax.cloud = TRUE)`), and none off Azure: the offline check
+  `options(zufax.cloud = TRUE)`), and none off Azure: the offline check
   comes first.
 - Exactly one URL can be requested:
   `http://169.254.169.254/metadata/instance?api-version=2021-02-01`. The
@@ -73,5 +73,5 @@ summary says `node` to make that clear.
   `refresh = TRUE` tries again.
 - Where IMDS is blocked (some network policies, App Service, Container
   Apps), the facts are `unavailable` with the reason in
-  [`facts_df()`](https://pedrobtz.github.io/fax/reference/facts_df.md).
+  [`facts_df()`](https://pedrobtz.github.io/zufax/reference/facts_df.md).
 - Parsing the response needs the jsonlite package.

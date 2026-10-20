@@ -1,25 +1,25 @@
 # CPU and memory in log lines
 
-[`usage()`](https://pedrobtz.github.io/fax/reference/usage.md) reads the
-current CPU and memory use of the R process and its container. It is
+[`usage()`](https://pedrobtz.github.io/zufax/reference/usage.md) reads
+the current CPU and memory use of the R process and its container. It is
 built to be called on every log line: everything static is worked out
 once per session, and each call reads three small files on Linux (about
 170 microseconds).
 
 ``` r
 
-library(fax)
+library(zufax)
 u <- usage()
 u
-#> cpu=1.3/4 mem=2.7G/15.6G(17%) rss=114M
+#> cpu=1.5/4 mem=2.8G/15.6G(18%) rss=113.9M
 unclass(u)
 #>          time   cpu_process    cpu_cgroup cpu_throttled     cpu_limit 
-#>  1.791204e+09  1.330402e+00            NA            NA  4.000000e+00 
+#>  1.792502e+09  1.533066e+00            NA            NA  4.000000e+00 
 #>       mem_rss    mem_cgroup     mem_limit       mem_pct 
-#>  1.195418e+08  2.904097e+09  1.676641e+10  1.732092e-01
+#>  1.194680e+08  2.980209e+09  1.676034e+10  1.778131e-01
 ```
 
-[`usage_line()`](https://pedrobtz.github.io/fax/reference/usage.md)
+[`usage_line()`](https://pedrobtz.github.io/zufax/reference/usage.md)
 gives the same as one string:
 
 ``` r
@@ -56,18 +56,18 @@ fields are `NA`.
 
 ## With logging packages
 
-fax depends on none of them;
-[`usage_line()`](https://pedrobtz.github.io/fax/reference/usage.md) is
+zufax depends on none of them;
+[`usage_line()`](https://pedrobtz.github.io/zufax/reference/usage.md) is
 just a string.
 
 ``` r
 
 # logger
-logger::log_info("model fitted {fax::usage_line()}")
+logger::log_info("model fitted {zufax::usage_line()}")
 
 # lgr: as a custom field, or the numbers themselves for JSON appenders
-lgr::lgr$info("model fitted", usage = fax::usage_line())
-lgr::lgr$info("model fitted", usage = as.list(unclass(fax::usage())))
+lgr::lgr$info("model fitted", usage = zufax::usage_line())
+lgr::lgr$info("model fitted", usage = as.list(unclass(zufax::usage())))
 ```
 
 In very hot loops, `max_age` returns the previous result if it is recent
