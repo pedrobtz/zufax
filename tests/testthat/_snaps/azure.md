@@ -3,7 +3,7 @@
     Code
       print(facts(refresh = TRUE))
     Output
-      <fax facts>
+      <zufax facts>
       os       Ubuntu 24.04
       runs in  Kubernetes pod analytics/spark-driver-7d9f-xk2lp, containerd container
       runs on  vm (hyperv), cloud azure (aks)
@@ -17,7 +17,7 @@
     Code
       print(facts(cloud = TRUE, refresh = TRUE))
     Output
-      <fax facts>
+      <zufax facts>
       os       Ubuntu 24.04
       runs in  Kubernetes pod analytics/spark-driver-7d9f-xk2lp, containerd container
       runs on  vm (hyperv), cloud azure (aks), node westeurope Standard_D4s_v5

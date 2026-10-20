@@ -3,7 +3,7 @@
     Code
       print(facts(refresh = TRUE))
     Output
-      <fax facts>
+      <zufax facts>
       os       Ubuntu 22.04
       runs in  Kubernetes pod default/web-6b8f9-2xkqz, containerd container
       runs on  vm (unknown)
@@ -16,7 +16,7 @@
     Code
       print(facts(refresh = TRUE))
     Output
-      <fax facts>
+      <zufax facts>
       os       Ubuntu 24.04
       runs in  Kubernetes pod analytics/spark-driver-7d9f-xk2lp, containerd container
       runs on  vm (hyperv), cloud azure (aks)
@@ -30,7 +30,7 @@
     Code
       print(facts(refresh = TRUE))
     Output
-      <fax facts>
+      <zufax facts>
       os       Ubuntu 24.04
       runs in  no container
       runs on  bare metal
@@ -43,7 +43,7 @@
     Code
       print(facts(refresh = TRUE))
     Output
-      <fax facts>
+      <zufax facts>
       os       Ubuntu 24.04
       runs in  no container
       runs on  vm (hyperv), cloud azure
@@ -56,7 +56,7 @@
     Code
       print(facts(refresh = TRUE))
     Output
-      <fax facts>
+      <zufax facts>
       os       Ubuntu 24.04
       runs in  no container
       runs on  WSL2
@@ -69,7 +69,7 @@
     Code
       print(facts(refresh = TRUE))
     Output
-      <fax facts>
+      <zufax facts>
       os       Ubuntu 22.04
       runs in  docker container
       runs on  vm (unknown)

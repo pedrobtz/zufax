@@ -4,18 +4,18 @@ register_builtins()
 
 # Replace the registry with the given resolvers for the rest of the test.
 local_registry <- function(..., opt_in = "packages", env = parent.frame()) {
-  old_resolvers <- .fax$resolvers
-  old_opt_in <- .fax$opt_in
-  .fax$resolvers <- list()
-  .fax$opt_in <- opt_in
+  old_resolvers <- .zufax$resolvers
+  old_opt_in <- .zufax$opt_in
+  .zufax$resolvers <- list()
+  .zufax$opt_in <- opt_in
   cache_clear()
   for (r in list(...)) {
     register(r)
   }
   withr::defer(
     {
-      .fax$resolvers <- old_resolvers
-      .fax$opt_in <- old_opt_in
+      .zufax$resolvers <- old_resolvers
+      .zufax$opt_in <- old_opt_in
       cache_clear()
     },
     envir = env
@@ -24,7 +24,7 @@ local_registry <- function(..., opt_in = "packages", env = parent.frame()) {
 }
 
 # Write `files` (a named list of path = lines) under a temporary root and point
-# `fax.root` at it for the rest of the test.
+# `zufax.root` at it for the rest of the test.
 local_root <- function(files = list(), env = parent.frame()) {
   root <- withr::local_tempdir(.local_envir = env)
   for (path in names(files)) {
@@ -32,7 +32,7 @@ local_root <- function(files = list(), env = parent.frame()) {
     dir.create(dirname(full), recursive = TRUE, showWarnings = FALSE)
     writeLines(files[[path]], full)
   }
-  withr::local_options(fax.root = root, .local_envir = env)
+  withr::local_options(zufax.root = root, .local_envir = env)
   root
 }
 
@@ -58,16 +58,16 @@ fixture_names <- function() {
 }
 
 fixture_root <- function(name) {
-  dir <- file.path(tempdir(), "fax-fixtures", name)
+  dir <- file.path(tempdir(), "zufax-fixtures", name)
   if (!dir.exists(dir)) {
     utils::untar(test_path("fixtures", paste0(name, ".tar.gz")), exdir = dir, tar = "internal")
   }
   dir
 }
 
-# Point fax at a fixture, pretending to be Linux.
+# Point zufax at a fixture, pretending to be Linux.
 local_fixture <- function(name, os = "linux", env = parent.frame()) {
-  withr::local_options(fax.root = fixture_root(name), fax.os = os, .local_envir = env)
+  withr::local_options(zufax.root = fixture_root(name), zufax.os = os, .local_envir = env)
 }
 
 # A writable copy of a fixture, for tests that change files between calls.
@@ -75,7 +75,7 @@ local_fixture_copy <- function(name, env = parent.frame()) {
   dir <- withr::local_tempdir(.local_envir = env)
   files <- list.files(fixture_root(name), full.names = TRUE, all.files = TRUE, no.. = TRUE)
   file.copy(files, dir, recursive = TRUE)
-  withr::local_options(fax.root = dir, fax.os = "linux", .local_envir = env)
+  withr::local_options(zufax.root = dir, zufax.os = "linux", .local_envir = env)
   dir
 }
 
@@ -108,15 +108,15 @@ local_usage_reset <- function(env = parent.frame()) {
 }
 
 # No Python-related environment variables, a fresh probe memo, and the Python
-# facts not skipped (see setup-fax.R).
+# facts not skipped (see setup-zufax.R).
 local_python_env <- function(..., env = parent.frame()) {
   vars <- list(RETICULATE_PYTHON = NA, VIRTUAL_ENV = NA, CONDA_PREFIX = NA)
   overrides <- list(...)
   vars[names(overrides)] <- overrides
   withr::local_envvar(.new = vars, .local_envir = env)
-  withr::local_options(fax.skip = NULL, .local_envir = env)
-  .fax$python_probe <- list()
-  withr::defer(.fax$python_probe <- list(), envir = env)
+  withr::local_options(zufax.skip = NULL, .local_envir = env)
+  .zufax$python_probe <- list()
+  withr::defer(.zufax$python_probe <- list(), envir = env)
 }
 
 # Create files (path = lines) below `dir`.
@@ -133,7 +133,7 @@ write_files <- function(dir, files) {
 local_imds <- function(body = NULL, error = NULL, env = parent.frame()) {
   calls <- 0
   withr::local_options(
-    fax.http_mock = function(url, headers) {
+    zufax.http_mock = function(url, headers) {
       calls <<- calls + 1
       if (!is.null(error)) {
         unavailable(error)
@@ -142,8 +142,8 @@ local_imds <- function(body = NULL, error = NULL, env = parent.frame()) {
     },
     .local_envir = env
   )
-  .fax$imds <- list()
-  withr::defer(.fax$imds <- list(), envir = env)
+  .zufax$imds <- list()
+  withr::defer(.zufax$imds <- list(), envir = env)
   function() calls
 }
 
@@ -179,7 +179,7 @@ local_azure_env <- function(..., env = parent.frame()) {
 local_cmd_outputs <- function(..., env = parent.frame()) {
   outputs <- list(...)
   withr::local_options(
-    fax.cmd_mock = function(cmd, args) {
+    zufax.cmd_mock = function(cmd, args) {
       file <- outputs[[basename(cmd)]]
       if (is.null(file)) NULL else readLines(test_path("fixtures", "cmd", file))
     },

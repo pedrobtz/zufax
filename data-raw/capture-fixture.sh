@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copy the files fax reads into a fixture tree that mirrors the filesystem.
+# Copy the files zufax reads into a fixture tree that mirrors the filesystem.
 #
 #   capture-fixture.sh OUT_DIR
 #

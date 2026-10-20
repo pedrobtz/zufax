@@ -1,14 +1,14 @@
 #' @export
-format.fax <- function(x, ...) {
+format.zufax <- function(x, ...) {
   value <- function(name) {
     if (!name %in% known_facts()) {
       return(NULL)
     }
-    v <- fax_get(x, name)
+    v <- zufax_get(x, name)
     if (length(v) == 1 && is.na(v)) NULL else v
   }
-  state <- fax_state(x)
-  lines <- "<fax facts>"
+  state <- zufax_state(x)
+  lines <- "<zufax facts>"
   add <- function(label, text) {
     if (length(text) && !is.na(text) && nzchar(text)) {
       lines <<- c(lines, sprintf("%-8s %s", label, text))
@@ -120,7 +120,7 @@ format.fax <- function(x, ...) {
 }
 
 #' @export
-print.fax <- function(x, ...) {
+print.zufax <- function(x, ...) {
   cat(format(x, ...), sep = "\n")
   invisible(x)
 }

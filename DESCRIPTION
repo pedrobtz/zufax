@@ -1,4 +1,4 @@
-Package: fax
+Package: zufax
 Title: Facts About the Host, Container and Runtime
 Version: 0.1.0
 Authors@R:
@@ -13,8 +13,8 @@ Description: Reports facts about the operating system, hardware,
     provides a cheap CPU and memory usage probe for log messages. Makes no
     network requests unless cloud instance metadata is explicitly requested.
 License: MIT + file LICENSE
-URL: https://pedrobtz.github.io/fax/, https://github.com/pedrobtz/fax
-BugReports: https://github.com/pedrobtz/fax/issues
+URL: https://pedrobtz.github.io/zufax/, https://github.com/pedrobtz/zufax
+BugReports: https://github.com/pedrobtz/zufax/issues
 Depends:
     R (>= 4.1.0)
 Imports:

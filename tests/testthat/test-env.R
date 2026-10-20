@@ -47,13 +47,13 @@ test_that("redaction modes are honored", {
 })
 
 test_that("env.vars uses the redaction options", {
-  withr::local_envvar(FAX_TEST_TOKEN = "s3cret", FAX_TEST_PLAIN = "visible")
+  withr::local_envvar(ZUFAX_TEST_TOKEN = "s3cret", ZUFAX_TEST_PLAIN = "visible")
   vars <- fact("env.vars")
-  expect_equal(vars[["FAX_TEST_TOKEN"]], "<redacted>")
-  expect_equal(vars[["FAX_TEST_PLAIN"]], "visible")
-  withr::local_options(fax.redact = "allowlist", fax.redact_allowlist = "FAX_TEST_PLAIN")
-  expect_equal(fact("env.vars"), c(FAX_TEST_PLAIN = "visible"))
-  withr::local_options(fax.redact = "bogus")
+  expect_equal(vars[["ZUFAX_TEST_TOKEN"]], "<redacted>")
+  expect_equal(vars[["ZUFAX_TEST_PLAIN"]], "visible")
+  withr::local_options(zufax.redact = "allowlist", zufax.redact_allowlist = "ZUFAX_TEST_PLAIN")
+  expect_equal(fact("env.vars"), c(ZUFAX_TEST_PLAIN = "visible"))
+  withr::local_options(zufax.redact = "bogus")
   df <- facts_df(facts("env"))
   expect_equal(df$status[df$fact == "env.vars"], "error")
 })
@@ -91,12 +91,12 @@ test_that("mount_for() picks the longest matching mount point", {
 })
 
 test_that("env.vars works when a value is not valid UTF-8", {
-  withr::local_envvar(FAX_TEST_LATIN1 = "caf\xe9", FAX_TEST_PLAIN = "visible")
+  withr::local_envvar(ZUFAX_TEST_LATIN1 = "caf\xe9", ZUFAX_TEST_PLAIN = "visible")
   df <- facts_df(facts("env", refresh = TRUE))
   expect_equal(df$status[df$fact == "env.vars"], "ok")
   vars <- df$value[df$fact == "env.vars"][[1]]
-  expect_equal(vars[["FAX_TEST_LATIN1"]], "caf<e9>")
-  expect_equal(vars[["FAX_TEST_PLAIN"]], "visible")
+  expect_equal(vars[["ZUFAX_TEST_LATIN1"]], "caf<e9>")
+  expect_equal(vars[["ZUFAX_TEST_PLAIN"]], "visible")
   df <- facts_df(facts("runtime", refresh = TRUE))
   expect_equal(df$status[df$fact == "runtime.threads.env"], "ok")
   expect_false(any(df$status == "error"))

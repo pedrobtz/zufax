@@ -14,7 +14,7 @@
       Error:
       ! Failed to resolve fact `toy.inner`: boom
 
-# a fax object gives namespaces, groups and facts
+# a zufax object gives namespaces, groups and facts
 
     Code
       f$nope
@@ -27,7 +27,7 @@
     Code
       f
     Output
-      <fax facts>
+      <zufax facts>
       os       linux
       runs in  no container
       runs on  unknown
@@ -63,5 +63,5 @@
       facts_df(list())
     Condition
       Error:
-      ! `x` must be a fax object created by `facts()`.
+      ! `x` must be a zufax object created by `facts()`.
 

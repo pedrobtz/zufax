@@ -1,16 +1,16 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: fax-live
+  name: zufax-live
   labels:
-    app: fax-live
+    app: zufax-live
   annotations:
     team: data
 spec:
   restartPolicy: Never
   containers:
-    - name: fax
-      image: fax-live:latest
+    - name: zufax
+      image: zufax-live:latest
       imagePullPolicy: Never
       command: ["Rscript", "/tools/live/k8s.R"]
       resources:

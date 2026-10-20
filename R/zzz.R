@@ -1,5 +1,5 @@
 .onLoad <- function(libname, pkgname) {
-  .fax$sysname <- tolower(Sys.info()[["sysname"]])
+  .zufax$sysname <- tolower(Sys.info()[["sysname"]])
   register_builtins()
 }
 

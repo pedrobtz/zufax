@@ -1,11 +1,11 @@
-test_that("fax_root() prefers the option, then FAX_ROOT, then /", {
-  withr::local_options(fax.root = NULL)
-  withr::local_envvar(FAX_ROOT = NA)
-  expect_equal(fax_root(), "/")
-  withr::local_envvar(FAX_ROOT = "/host")
-  expect_equal(fax_root(), "/host")
-  withr::local_options(fax.root = "/fixture")
-  expect_equal(fax_root(), "/fixture")
+test_that("zufax_root() prefers the option, then ZUFAX_ROOT, then /", {
+  withr::local_options(zufax.root = NULL)
+  withr::local_envvar(ZUFAX_ROOT = NA)
+  expect_equal(zufax_root(), "/")
+  withr::local_envvar(ZUFAX_ROOT = "/host")
+  expect_equal(zufax_root(), "/host")
+  withr::local_options(zufax.root = "/fixture")
+  expect_equal(zufax_root(), "/fixture")
 })
 
 test_that("root_path() joins root and absolute path", {
@@ -35,7 +35,7 @@ test_that("non-UTF-8 bytes in files become valid strings", {
   lines <- read_lines("/etc/os-release")
   expect_true(all(validUTF8(lines)))
   expect_equal(lines[1], "NAME=\"D<e9>bian GNU/Linux\"")
-  withr::local_options(fax.os = "linux")
+  withr::local_options(zufax.os = "linux")
   df <- facts_df(facts("os", refresh = TRUE))
   expect_false(any(df$status == "error"))
   expect_equal(df$value[df$fact == "os.id"][[1]], "debian")

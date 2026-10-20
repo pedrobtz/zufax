@@ -10,12 +10,16 @@ http_allowed <- function(url) {
 }
 
 # Returns list(status, body). Tests replace the transport with
-# `options(fax.http_mock = function(url, headers) ...)`.
+# `options(zufax.http_mock = function(url, headers) ...)`.
 http_get <- function(url, headers = character(), timeout = 1) {
   if (!http_allowed(url)) {
-    fax_abort("Refusing to request %s: not on the fax allowlist.", url, class = "fax_http_refused")
+    zufax_abort(
+      "Refusing to request %s: not on the zufax allowlist.",
+      url,
+      class = "zufax_http_refused"
+    )
   }
-  mock <- getOption("fax.http_mock")
+  mock <- getOption("zufax.http_mock")
   if (is.function(mock)) {
     return(mock(url, headers))
   }

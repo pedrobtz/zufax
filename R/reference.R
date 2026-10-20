@@ -1,4 +1,4 @@
-# Type and one-line description of every fact. The ?fax_facts help page is
+# Type and one-line description of every fact. The ?zufax_facts help page is
 # generated from this table plus the registry (platforms, opt-in, network), and
 # a test checks that every registered fact is described here.
 # nolint start: line_length_linter. One fact per line reads better than wrapped.
@@ -138,7 +138,7 @@ packages.python | df | Installed Python packages: name, version, location, insta
 # Operating systems a fact has a resolver for.
 fact_platforms <- function(name) {
   oses <- c("linux", "darwin", "windows")
-  supported <- unique(unlist(lapply(.fax$resolvers[[name]], function(r) {
+  supported <- unique(unlist(lapply(.zufax$resolvers[[name]], function(r) {
     os <- r$confine$os
     if (is.null(os)) {
       oses
@@ -163,11 +163,11 @@ fact_reference <- function() {
     docs <- fact_docs[match(facts, fact_docs$fact), ]
     network <- vapply(
       facts,
-      \(f) any(vapply(.fax$resolvers[[f]], `[[`, logical(1), "network")),
+      \(f) any(vapply(.zufax$resolvers[[f]], `[[`, logical(1), "network")),
       logical(1)
     )
     notes <- ifelse(network, " Needs `cloud = TRUE`.", "")
-    title <- if (ns %in% .fax$opt_in) paste0(ns, " (opt-in)") else ns
+    title <- if (ns %in% .zufax$opt_in) paste0(ns, " (opt-in)") else ns
     lines <- c(
       lines,
       paste0("@section ", title, ":"),
@@ -188,7 +188,7 @@ fact_reference <- function() {
   lines
 }
 
-#' Every fact fax reports
+#' Every fact zufax reports
 #'
 #' Facts are grouped in namespaces. Values that are unknown are `NA`;
 #' unlimited limits are `Inf`. Types: `bytes` are numbers of bytes, `cores`
@@ -202,5 +202,5 @@ fact_reference <- function() {
 #'
 #' @eval fact_reference()
 #' @seealso [facts()], [fact()], [facts_df()].
-#' @name fax_facts
+#' @name zufax_facts
 NULL

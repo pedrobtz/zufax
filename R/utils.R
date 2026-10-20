@@ -2,12 +2,12 @@
 
 `%|NA|%` <- function(x, y) if (!length(x) || is.na(x[1])) y else x # nolint: object_name_linter.
 
-fax_abort <- function(message, ..., class = NULL) {
+zufax_abort <- function(message, ..., class = NULL) {
   if (...length()) {
     message <- sprintf(message, ...)
   }
   cnd <- structure(
-    class = c(class, "fax_error", "error", "condition"),
+    class = c(class, "zufax_error", "error", "condition"),
     list(message = message, call = NULL)
   )
   stop(cnd)

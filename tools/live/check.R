@@ -1,6 +1,6 @@
 # Live checks run inside containers and pods by .github/workflows/live.yaml.
 # Expectations come from environment variables; unset ones are not checked.
-library(fax)
+library(zufax)
 
 failures <- 0
 check <- function(ok, what) {
@@ -54,7 +54,7 @@ tick <- 0
 assignInNamespace("usage_now", function() {
   tick <<- tick + 1
   c(cpu = tick / 2, elapsed = tick)
-}, "fax")
+}, "zufax")
 usage()
 n <- 5000
 elapsed <- system.time(for (i in seq_len(n)) usage())[["elapsed"]]

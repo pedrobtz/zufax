@@ -1,10 +1,10 @@
 # Root-aware file access. Every filesystem read goes through these so tests
-# can point `fax.root` at a fixture tree. Missing or unreadable files give NULL.
+# can point `zufax.root` at a fixture tree. Missing or unreadable files give NULL.
 
-fax_root <- function() {
-  root <- getOption("fax.root")
+zufax_root <- function() {
+  root <- getOption("zufax.root")
   if (is.null(root)) {
-    root <- Sys.getenv("FAX_ROOT")
+    root <- Sys.getenv("ZUFAX_ROOT")
   }
   if (!nzchar(root)) {
     root <- "/"
@@ -12,14 +12,14 @@ fax_root <- function() {
   root
 }
 
-root_path <- function(path, root = fax_root()) {
+root_path <- function(path, root = zufax_root()) {
   if (identical(root, "/")) {
     return(path)
   }
   paste0(sub("/+$", "", root), "/", sub("^/+", "", path))
 }
 
-read_lines <- function(path, root = fax_root(), n = -1L) {
+read_lines <- function(path, root = zufax_root(), n = -1L) {
   lines <- tryCatch(
     suppressWarnings(readLines(root_path(path, root), n = n, warn = FALSE)),
     error = function(e) NULL
@@ -45,11 +45,11 @@ as_utf8 <- function(x) {
   x
 }
 
-file_exists <- function(path, root = fax_root()) {
+file_exists <- function(path, root = zufax_root()) {
   file.exists(root_path(path, root))
 }
 
-list_dir <- function(path, root = fax_root()) {
+list_dir <- function(path, root = zufax_root()) {
   path <- root_path(path, root)
   if (!dir.exists(path)) {
     return(NULL)

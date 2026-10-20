@@ -49,7 +49,7 @@ test_that("v1_limit() treats huge values as unlimited", {
 
 test_that("cgroup facts are unavailable without cgroup files", {
   local_root(list("proc/meminfo" = "MemTotal: 1024 kB"))
-  withr::local_options(fax.os = "linux")
+  withr::local_options(zufax.os = "linux")
   df <- facts_df(facts(refresh = TRUE))
   expect_equal(unique(df$status[startsWith(df$fact, "cgroup.")]), "unavailable")
   expect_equal(fact("memory.effective.limit"), 1024^2)

@@ -74,7 +74,7 @@ test_that("parse_os_release() removes quotes and comments", {
 
 test_that("WSL versions are told apart by the kernel release", {
   local_root(list("proc/sys/kernel/osrelease" = "4.4.0-19041-Microsoft"))
-  withr::local_options(fax.os = "linux")
+  withr::local_options(zufax.os = "linux")
   expect_equal(fact("virtualization.wsl"), 1L)
   local_fixture("wsl2")
   expect_equal(fact("virtualization.wsl"), 2L)
@@ -134,14 +134,14 @@ test_that("Downward API env names can be remapped", {
     MEMORY_LIMIT = "1073741824",
     CPU_LIMIT = NA
   )
-  withr::local_options(fax.k8s.env = c(pod.name = "MY_POD", cpu.limit = "MY_CPU"))
+  withr::local_options(zufax.k8s.env = c(pod.name = "MY_POD", cpu.limit = "MY_CPU"))
   expect_equal(fact("k8s.pod.name"), "custom-name")
   expect_equal(fact("k8s.resources.limits"), c(cpu = 2, memory = 1024^3))
 })
 
 test_that("a missing Downward API volume is reported", {
   local_fixture("aks-pod-downward-api")
-  withr::local_options(fax.k8s.podinfo = "/nowhere")
+  withr::local_options(zufax.k8s.podinfo = "/nowhere")
   df <- facts_df(facts("k8s"))
   expect_equal(df$status[df$fact == "k8s.pod.labels"], "unavailable")
   expect_match(df$message[df$fact == "k8s.pod.labels"], "/nowhere/labels")
@@ -157,7 +157,7 @@ test_that("KUBERNETES_SERVICE_HOST alone means Kubernetes", {
 test_that("the timezone comes from TZ, /etc/localtime or /etc/timezone", {
   skip_on_os("windows")
   root <- local_root(list("usr/share/zoneinfo/America/Chicago" = "x"))
-  withr::local_options(fax.os = "linux")
+  withr::local_options(zufax.os = "linux")
   withr::local_envvar(TZ = NA)
   expect_equal(fact("os.timezone"), "UTC")
   dir.create(file.path(root, "etc"))
@@ -180,7 +180,7 @@ test_that("Xen-based EC2 instances are recognized from the BIOS version", {
     "sys/class/dmi/id/bios_vendor" = "Xen",
     "sys/class/dmi/id/bios_version" = "4.2.amazon"
   ))
-  withr::local_options(fax.os = "linux")
+  withr::local_options(zufax.os = "linux")
   local_azure_env()
   f <- facts(c("virtualization", "cloud"), refresh = TRUE)
   expect_equal(f[["virtualization.hypervisor"]], "xen")

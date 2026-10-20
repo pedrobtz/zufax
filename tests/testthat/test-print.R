@@ -1,5 +1,5 @@
 test_that("print() summarizes substrate and resources", {
-  withr::local_options(fax.skip = "runtime")
+  withr::local_options(zufax.skip = "runtime")
   withr::local_envvar(container = NA)
   local_azure_env()
   for (name in c(
@@ -27,7 +27,7 @@ test_that("print() shows R and Python when available", {
 })
 
 test_that("print() warns about OOM kills and a tmpfs tempdir() in containers", {
-  withr::local_options(fax.skip = "runtime")
+  withr::local_options(zufax.skip = "runtime")
   local_azure_env()
   local_fixture("aks-pod-downward-api")
   local_mocked_bindings(mount_for = function(mounts, path) data.frame(fstype = "tmpfs"))
@@ -37,7 +37,7 @@ test_that("print() warns about OOM kills and a tmpfs tempdir() in containers", {
 })
 
 test_that("print() notes OOM kill counts beyond the integer range", {
-  withr::local_options(fax.skip = "runtime")
+  withr::local_options(zufax.skip = "runtime")
   local_azure_env()
   root <- local_fixture_copy("docker-v2-cpus1.5-mem512m")
   writeLines(c("low 0", "oom_kill 3000000000"), file.path(root, "sys/fs/cgroup/memory.events"))

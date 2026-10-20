@@ -6,7 +6,7 @@ title: "Azure"
 knitr::opts_chunk$set(collapse = TRUE, comment = "#>", eval = FALSE)
 ```
 
-fax recognizes Azure without network access, and with `cloud = TRUE` reads the
+zufax recognizes Azure without network access, and with `cloud = TRUE` reads the
 instance metadata service (IMDS) for details such as region and VM size.
 
 ## Offline: which service am I on?
@@ -37,7 +37,7 @@ Service site and instance or the Batch pool, node, job and task.
 ```{r}
 f <- facts(cloud = TRUE)
 f
-#> <fax facts>
+#> <zufax facts>
 #> os       Ubuntu 24.04
 #> runs in  Kubernetes pod analytics/spark-driver-7d9f-xk2lp, containerd container
 #> runs on  vm (hyperv), cloud azure (aks), node westeurope Standard_D4s_v5
@@ -61,9 +61,9 @@ looks like a secret are redacted, like environment variables.
 In a pod, the metadata describes the **node VM**, not the pod: the summary says
 `node` to make that clear.
 
-## What fax does and does not do
+## What zufax does and does not do
 
-* No request is made without `cloud = TRUE` (or `options(fax.cloud = TRUE)`),
+* No request is made without `cloud = TRUE` (or `options(zufax.cloud = TRUE)`),
   and none off Azure: the offline check comes first.
 * Exactly one URL can be requested:
   `http://169.254.169.254/metadata/instance?api-version=2021-02-01`. The

@@ -3,13 +3,13 @@
 
 test_that("no fact errors on this machine", {
   skip_on_cran()
-  withr::local_options(fax.root = NULL, fax.os = NULL)
+  withr::local_options(zufax.root = NULL, zufax.os = NULL)
   df <- facts_df(facts(refresh = TRUE))
   expect_equal(df[df$status == "error", c("fact", "message")], df[0, c("fact", "message")])
 })
 
 test_that("effective values are sane on this machine", {
-  withr::local_options(fax.root = NULL, fax.os = NULL)
+  withr::local_options(zufax.root = NULL, zufax.os = NULL)
   n <- effective_cores()
   expect_gte(n, 1L)
   expect_lte(n, max(1L, parallel::detectCores(), na.rm = TRUE))
@@ -24,7 +24,7 @@ test_that("GitHub-hosted Linux runners are Azure VMs", {
   skip_if_not(identical(Sys.getenv("GITHUB_ACTIONS"), "true"), "not on GitHub Actions")
   skip_if_not(identical(Sys.getenv("RUNNER_ENVIRONMENT"), "github-hosted"), "not a hosted runner")
   skip_if_not(identical(Sys.info()[["sysname"]], "Linux"), "not Linux")
-  withr::local_options(fax.root = NULL, fax.os = NULL)
+  withr::local_options(zufax.root = NULL, zufax.os = NULL)
   expect_equal(fact("virtualization.type"), "vm")
   expect_equal(fact("virtualization.hypervisor"), "hyperv")
   expect_equal(fact("cloud.provider"), "azure")
@@ -37,7 +37,7 @@ test_that("IMDS on GitHub-hosted Linux runners answers quickly or is reported bl
   skip_if_not(identical(Sys.getenv("RUNNER_ENVIRONMENT"), "github-hosted"), "not a hosted runner")
   skip_if_not(identical(Sys.info()[["sysname"]], "Linux"), "not Linux")
   skip_if_not_installed("jsonlite")
-  withr::local_options(fax.root = NULL, fax.os = NULL)
+  withr::local_options(zufax.root = NULL, zufax.os = NULL)
   start <- proc.time()[["elapsed"]]
   f <- facts(cloud = TRUE, refresh = TRUE)
   df <- facts_df(f, "cloud")
@@ -53,7 +53,7 @@ test_that("IMDS on GitHub-hosted Linux runners answers quickly or is reported bl
 test_that("host facts resolve natively on every CI OS", {
   skip_on_cran()
   skip_if_not(identical(Sys.getenv("GITHUB_ACTIONS"), "true"), "not on GitHub Actions")
-  withr::local_options(fax.root = NULL, fax.os = NULL)
+  withr::local_options(zufax.root = NULL, zufax.os = NULL)
   df <- facts_df(facts(refresh = TRUE))
   row <- \(fact) df[df$fact == fact, ]
   for (fact in c(

@@ -14,12 +14,12 @@
 #' @param namespaces Namespaces to resolve immediately, e.g.
 #'   `c("cpu", "memory")`. With `NULL`, nothing is resolved until accessed.
 #' @param cloud Allow network requests to the cloud instance metadata service.
-#'   Defaults to the `fax.cloud` option, else `FALSE`.
+#'   Defaults to the `zufax.cloud` option, else `FALSE`.
 #' @param refresh If `TRUE`, ignore cached values and resolve facts again.
 #' @param strict If `TRUE`, re-raise errors from resolvers instead of recording
-#'   them as `status = "error"`. Defaults to the `fax.strict` option, else
+#'   them as `status = "error"`. Defaults to the `zufax.strict` option, else
 #'   `FALSE`.
-#' @returns An object of class `fax`:
+#' @returns An object of class `zufax`:
 #'   * `x$cpu` or `x[["cpu"]]` returns a namespace as a nested list of values.
 #'   * `x[["cpu.host"]]` returns a group of facts the same way.
 #'   * `x[["cpu.effective"]]` returns the value of a single fact.
@@ -33,14 +33,14 @@
 #' names(f)
 facts <- function(
   namespaces = NULL,
-  cloud = getOption("fax.cloud", FALSE),
+  cloud = getOption("zufax.cloud", FALSE),
   refresh = FALSE,
-  strict = getOption("fax.strict", FALSE)
+  strict = getOption("zufax.strict", FALSE)
 ) {
   check_namespaces(namespaces)
-  x <- structure(list(state = new_state(cloud, refresh, strict)), class = "fax")
+  x <- structure(list(state = new_state(cloud, refresh, strict)), class = "zufax")
   for (ns in namespaces) {
-    resolve_group(ns, fax_state(x))
+    resolve_group(ns, zufax_state(x))
   }
   x
 }
@@ -57,18 +57,18 @@ facts <- function(
 #' fact("os.family")
 fact <- function(
   name,
-  cloud = getOption("fax.cloud", FALSE),
+  cloud = getOption("zufax.cloud", FALSE),
   refresh = FALSE,
-  strict = getOption("fax.strict", FALSE)
+  strict = getOption("zufax.strict", FALSE)
 ) {
   if (!is_string(name)) {
-    fax_abort("`name` must be a single string.")
+    zufax_abort("`name` must be a single string.")
   }
   if (!name %in% known_facts()) {
     if (any(startsWith(known_facts(), paste0(name, ".")))) {
-      fax_abort("`%s` is a group of facts; use `facts()[[\"%s\"]]`.", name, name)
+      zufax_abort("`%s` is a group of facts; use `facts()[[\"%s\"]]`.", name, name)
     }
-    fax_abort("Unknown fact `%s`.", name, class = "fax_unknown_fact")
+    zufax_abort("Unknown fact `%s`.", name, class = "zufax_unknown_fact")
   }
   resolve_fact(name, new_state(cloud, refresh, strict))$value
 }
@@ -77,7 +77,7 @@ fact <- function(
 #'
 #' Returns one row per fact, with the metadata recorded while resolving it.
 #'
-#' @param x A `fax` object from [facts()].
+#' @param x A `zufax` object from [facts()].
 #' @param namespaces Namespaces to include. With `NULL`, all default namespaces
 #'   plus any opt-in namespace already resolved in `x`.
 #' @returns A data frame with columns:
@@ -92,12 +92,12 @@ fact <- function(
 #' @examples
 #' facts_df(facts(), "cpu")
 facts_df <- function(x = facts(), namespaces = NULL) {
-  check_fax(x)
+  check_zufax(x)
   check_namespaces(namespaces)
-  state <- fax_state(x)
+  state <- zufax_state(x)
   if (is.null(namespaces)) {
     resolved <- unique(fact_namespace(names(state$memo)))
-    namespaces <- union(default_namespaces(), intersect(resolved, .fax$opt_in))
+    namespaces <- union(default_namespaces(), intersect(resolved, .zufax$opt_in))
     namespaces <- namespaces[order(match(namespaces, known_namespaces()))]
   }
   records <- unlist(
@@ -119,29 +119,29 @@ facts_df <- function(x = facts(), namespaces = NULL) {
 }
 
 #' @export
-`$.fax` <- function(x, name) fax_get(x, name)
+`$.zufax` <- function(x, name) zufax_get(x, name)
 
 #' @export
-`[[.fax` <- function(x, i, ...) fax_get(x, i)
+`[[.zufax` <- function(x, i, ...) zufax_get(x, i)
 
 #' @export
-names.fax <- function(x) known_namespaces()
+names.zufax <- function(x) known_namespaces()
 
 #' @export
-as.list.fax <- function(x, ...) {
+as.list.zufax <- function(x, ...) {
   ns <- default_namespaces()
-  out <- lapply(ns, \(name) fax_get(x, name))
+  out <- lapply(ns, \(name) zufax_get(x, name))
   names(out) <- ns
   out
 }
 
 # Helpers ----------------------------------------------------------------
 
-fax_state <- function(x) .subset2(x, "state")
+zufax_state <- function(x) .subset2(x, "state")
 
-check_fax <- function(x) {
-  if (!inherits(x, "fax")) {
-    fax_abort("`x` must be a fax object created by `facts()`.")
+check_zufax <- function(x) {
+  if (!inherits(x, "zufax")) {
+    zufax_abort("`x` must be a zufax object created by `facts()`.")
   }
 }
 
@@ -150,11 +150,11 @@ check_namespaces <- function(namespaces) {
     return(invisible())
   }
   if (!is.character(namespaces) || anyNA(namespaces)) {
-    fax_abort("`namespaces` must be a character vector or NULL.")
+    zufax_abort("`namespaces` must be a character vector or NULL.")
   }
   unknown <- setdiff(namespaces, known_namespaces())
   if (length(unknown)) {
-    fax_abort(
+    zufax_abort(
       "Unknown namespace %s. Available: %s.",
       paste0("`", unknown, "`", collapse = ", "),
       paste(known_namespaces(), collapse = ", ")
@@ -162,17 +162,17 @@ check_namespaces <- function(namespaces) {
   }
 }
 
-fax_get <- function(x, name) {
+zufax_get <- function(x, name) {
   if (!is_string(name)) {
-    fax_abort("Index a fax object with a single name.")
+    zufax_abort("Index a zufax object with a single name.")
   }
-  state <- fax_state(x)
+  state <- zufax_state(x)
   if (name %in% known_facts()) {
     return(resolve_fact(name, state)$value)
   }
   records <- resolve_group(name, state)
   if (!length(records)) {
-    fax_abort("Unknown namespace or fact `%s`.", name, class = "fax_unknown_fact")
+    zufax_abort("Unknown namespace or fact `%s`.", name, class = "zufax_unknown_fact")
   }
   nest_values(records, name)
 }

@@ -1,4 +1,4 @@
-url: https://pedrobtz.github.io/fax/
+url: https://pedrobtz.github.io/zufax/
 template:
   bootstrap: 5
 
@@ -9,7 +9,7 @@ reference:
   - fact
   - facts_df
   - facts_json
-  - fax_facts
+  - zufax_facts
 - title: Resources
   contents:
   - effective_cores
@@ -19,7 +19,7 @@ articles:
 - title: Articles
   navbar: ~
   contents:
-  - fax
+  - zufax
   - articles/azure
   - articles/logging
   - articles/inventory

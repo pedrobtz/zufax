@@ -1,6 +1,6 @@
 # Compares packages.python with pip in the environment named by VIRTUAL_ENV
 # or CONDA_PREFIX. Run by .github/workflows/live.yaml.
-library(fax)
+library(zufax)
 f <- facts(c("runtime", "packages"), refresh = TRUE)
 print(f$runtime$python)
 ours <- f[["packages.python"]]
@@ -12,9 +12,9 @@ theirs <- data.frame(
   version = sub("^.*==", "", pip)
 )
 missing <- setdiff(paste(theirs$name, theirs$version), paste(ours$name, ours$version))
-cat(nrow(theirs), "packages from pip,", nrow(ours), "from fax\n")
+cat(nrow(theirs), "packages from pip,", nrow(ours), "from zufax\n")
 if (length(missing)) {
-  cat("pip lists packages fax does not:", missing, sep = "\n  ")
+  cat("pip lists packages zufax does not:", missing, sep = "\n  ")
   quit(status = 1)
 }
 expected <- Sys.getenv("EXPECT_ENV_TYPE")

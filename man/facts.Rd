@@ -6,9 +6,9 @@
 \usage{
 facts(
   namespaces = NULL,
-  cloud = getOption("fax.cloud", FALSE),
+  cloud = getOption("zufax.cloud", FALSE),
   refresh = FALSE,
-  strict = getOption("fax.strict", FALSE)
+  strict = getOption("zufax.strict", FALSE)
 )
 }
 \arguments{
@@ -16,16 +16,16 @@ facts(
 \code{c("cpu", "memory")}. With \code{NULL}, nothing is resolved until accessed.}
 
 \item{cloud}{Allow network requests to the cloud instance metadata service.
-Defaults to the \code{fax.cloud} option, else \code{FALSE}.}
+Defaults to the \code{zufax.cloud} option, else \code{FALSE}.}
 
 \item{refresh}{If \code{TRUE}, ignore cached values and resolve facts again.}
 
 \item{strict}{If \code{TRUE}, re-raise errors from resolvers instead of recording
-them as \code{status = "error"}. Defaults to the \code{fax.strict} option, else
+them as \code{status = "error"}. Defaults to the \code{zufax.strict} option, else
 \code{FALSE}.}
 }
 \value{
-An object of class \code{fax}:
+An object of class \code{zufax}:
 \itemize{
 \item \code{x$cpu} or \code{x[["cpu"]]} returns a namespace as a nested list of values.
 \item \code{x[["cpu.host"]]} returns a group of facts the same way.

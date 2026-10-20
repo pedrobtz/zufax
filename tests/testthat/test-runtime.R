@@ -66,18 +66,18 @@ test_that("uid and privilege come from /proc/self/status on Linux", {
   local_root(list(
     "proc/self/status" = c("Uid:\t1000\t1000\t1000\t1000", "Gid:\t1000\t1000\t1000\t1000")
   ))
-  withr::local_options(fax.os = "linux")
+  withr::local_options(zufax.os = "linux")
   expect_false(fact("runtime.privileged"))
 })
 
 test_that("uid uses id on other Unix systems and whoami on Windows", {
-  withr::local_options(fax.os = "darwin", fax.cmd_mock = function(cmd, args) {
+  withr::local_options(zufax.os = "darwin", zufax.cmd_mock = function(cmd, args) {
     switch(paste(cmd, args), "id -u" = "501", "id -g" = "20", NULL)
   })
   expect_equal(fact("runtime.uid"), 501L)
   expect_equal(fact("runtime.gid"), 20L)
   expect_false(fact("runtime.privileged"))
-  withr::local_options(fax.os = "windows", fax.cmd_mock = function(cmd, args) {
+  withr::local_options(zufax.os = "windows", zufax.cmd_mock = function(cmd, args) {
     c("Mandatory Label\\High Mandatory Level Label S-1-16-12288")
   })
   expect_true(fact("runtime.privileged"))
@@ -104,8 +104,10 @@ test_that("the open-files limit comes from /proc/self/limits or ulimit", {
       "Max open files            1024                 1048576              files     "
     )
   ))
-  withr::local_options(fax.os = "linux")
+  withr::local_options(zufax.os = "linux")
   expect_equal(fact("runtime.rlimit.nofile"), 1024)
-  withr::local_options(fax.os = "darwin", fax.cmd_mock = function(cmd, args) if (cmd == "sh") "256")
+  withr::local_options(zufax.os = "darwin", zufax.cmd_mock = function(cmd, args) {
+    if (cmd == "sh") "256"
+  })
   expect_equal(fact("runtime.rlimit.nofile"), 256)
 })

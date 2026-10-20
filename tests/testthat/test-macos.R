@@ -1,5 +1,5 @@
 test_that("Intel macOS facts come from sysctl, sw_vers and vm_stat", {
-  withr::local_options(fax.os = "darwin")
+  withr::local_options(zufax.os = "darwin")
   local_cmd_outputs(
     sysctl = "macos-intel-sysctl.txt",
     sw_vers = "macos-sw_vers.txt",
@@ -30,7 +30,7 @@ test_that("Intel macOS facts come from sysctl, sw_vers and vm_stat", {
 })
 
 test_that("Apple silicon macOS VMs are recognized", {
-  withr::local_options(fax.os = "darwin")
+  withr::local_options(zufax.os = "darwin")
   local_cmd_outputs(sysctl = "macos-arm-sysctl.txt", sw_vers = "macos-sw_vers.txt")
   f <- facts(refresh = TRUE)
   expect_equal(f[["cpu.model"]], "Apple M2 Pro")
@@ -43,7 +43,7 @@ test_that("Apple silicon macOS VMs are recognized", {
 })
 
 test_that("macOS without sysctl falls back to detectCores()", {
-  withr::local_options(fax.os = "darwin", fax.cmd_mock = function(cmd, args) NULL)
+  withr::local_options(zufax.os = "darwin", zufax.cmd_mock = function(cmd, args) NULL)
   df <- facts_df(facts(refresh = TRUE))
   expect_equal(df$resolver[df$fact == "cpu.host.logical"], "cpu.host.logical/detectCores")
   expect_equal(df$status[df$fact == "memory.host.total"], "unavailable")

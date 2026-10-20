@@ -12,7 +12,7 @@ worked out once per session, and each call reads three small files on Linux
 (about 170 microseconds).
 
 ```{r}
-library(fax)
+library(zufax)
 u <- usage()
 u
 unclass(u)
@@ -52,15 +52,15 @@ are `NA`.
 
 ## With logging packages
 
-fax depends on none of them; `usage_line()` is just a string.
+zufax depends on none of them; `usage_line()` is just a string.
 
 ```{r, eval = FALSE}
 # logger
-logger::log_info("model fitted {fax::usage_line()}")
+logger::log_info("model fitted {zufax::usage_line()}")
 
 # lgr: as a custom field, or the numbers themselves for JSON appenders
-lgr::lgr$info("model fitted", usage = fax::usage_line())
-lgr::lgr$info("model fitted", usage = as.list(unclass(fax::usage())))
+lgr::lgr$info("model fitted", usage = zufax::usage_line())
+lgr::lgr$info("model fitted", usage = as.list(unclass(zufax::usage())))
 ```
 
 In very hot loops, `max_age` returns the previous result if it is recent

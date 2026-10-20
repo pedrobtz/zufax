@@ -14,12 +14,12 @@ test_that("confine filters on os and on other facts", {
     resolver("toy.dep", \(ctx) "flag set", confine = list(toy.flag = TRUE)),
     resolver("toy.fun", \(ctx) "big", confine = list(toy.flag = \(v) isFALSE(v)))
   )
-  withr::local_options(fax.os = "linux")
+  withr::local_options(zufax.os = "linux")
   expect_equal(fact("toy.os"), "linux only")
   expect_equal(fact("toy.dep"), "flag set")
   expect_equal(fact("toy.fun"), NA)
 
-  withr::local_options(fax.os = "windows")
+  withr::local_options(zufax.os = "windows")
   df <- facts_df()
   expect_equal(df$status[df$fact == "toy.os"], "not_applicable")
   expect_equal(df$message[df$fact == "toy.os"], "No resolver applies on this system.")
@@ -55,14 +55,14 @@ test_that("network resolvers only run with cloud = TRUE", {
   expect_equal(fact("toy.region", cloud = TRUE), "westeurope")
 })
 
-test_that("fax.skip skips facts and namespaces", {
+test_that("zufax.skip skips facts and namespaces", {
   a <- counting_resolver("toy.a")
   b <- counting_resolver("other.b")
   local_registry(a, b)
-  withr::local_options(fax.skip = c("toy.a", "other"))
+  withr::local_options(zufax.skip = c("toy.a", "other"))
   df <- facts_df()
   expect_equal(df$status, c("not_applicable", "not_applicable"))
-  expect_equal(df$message, rep("Skipped by `fax.skip`.", 2))
+  expect_equal(df$message, rep("Skipped by `zufax.skip`.", 2))
   expect_equal(c(a$calls(), b$calls()), c(0, 0))
 })
 
@@ -125,7 +125,7 @@ test_that("facts are cached per session, root and os", {
   local_root()
   fact("toy.a")
   expect_equal(r$calls(), 3)
-  withr::local_options(fax.os = "plan9")
+  withr::local_options(zufax.os = "plan9")
   fact("toy.a")
   expect_equal(r$calls(), 4)
 })
@@ -162,30 +162,30 @@ test_that("a fact is resolved once per call even with refresh = TRUE", {
 
 test_that("sources record files, env vars, commands and URLs", {
   local_root(list("proc/loadavg" = "0.1 0.2 0.3 1/2 3", "etc/kv" = "a: 1"))
-  withr::local_envvar(FAX_TEST_VAR = "x")
+  withr::local_envvar(ZUFAX_TEST_VAR = "x")
   withr::local_options(
-    fax.cmd_mock = \(cmd, args) "out",
-    fax.http_mock = \(url, headers) list(status = 200L, body = "{}")
+    zufax.cmd_mock = \(cmd, args) "out",
+    zufax.http_mock = \(url, headers) list(status = 200L, body = "{}")
   )
   url <- "http://169.254.169.254/metadata/instance?api-version=2021-02-01"
   local_registry(
     resolver("toy.file", \(ctx) ctx$read("/proc/loadavg")),
     resolver("toy.kv", \(ctx) ctx$read_kv("/etc/kv")),
-    resolver("toy.env", \(ctx) ctx$env("FAX_TEST_VAR")),
-    resolver("toy.unset", \(ctx) ctx$env("FAX_TEST_UNSET")),
+    resolver("toy.env", \(ctx) ctx$env("ZUFAX_TEST_VAR")),
+    resolver("toy.unset", \(ctx) ctx$env("ZUFAX_TEST_UNSET")),
     resolver("toy.cmd", \(ctx) ctx$cmd("sysctl", c("-n", "hw.ncpu"))$stdout),
     resolver("toy.http", \(ctx) ctx$http(url)$body, network = TRUE)
   )
   df <- facts_df(facts(cloud = TRUE))
   expect_equal(
     df$source,
-    c("/proc/loadavg", "/etc/kv", "env:FAX_TEST_VAR", NA, "sysctl -n hw.ncpu", url)
+    c("/proc/loadavg", "/etc/kv", "env:ZUFAX_TEST_VAR", NA, "sysctl -n hw.ncpu", url)
   )
   expect_equal(df$value[[2]], c(a = "1"))
   expect_equal(df$status[4], "unavailable")
 })
 
-test_that("a fax object gives namespaces, groups and facts", {
+test_that("a zufax object gives namespaces, groups and facts", {
   local_registry(
     resolver("cpu.host.logical", \(ctx) 8),
     resolver("cpu.host.physical", \(ctx) 4),
@@ -217,7 +217,7 @@ test_that("opt-in namespaces are only included once requested", {
 test_that("facts() with namespaces resolves eagerly", {
   r <- counting_resolver("cpu.effective")
   local_registry(r)
-  withr::local_options(fax.os = "linux", fax.root = "/")
+  withr::local_options(zufax.os = "linux", zufax.root = "/")
   f <- facts("cpu")
   expect_equal(r$calls(), 1)
   expect_snapshot(f)
@@ -260,7 +260,7 @@ test_that("facts that depend on uncached facts are not cached", {
   flag <- TRUE
   expect_equal(fact("toy.confined"), "yes")
   fact("toy.stable")
-  expect_named(as.list(.fax$cache), paste("/", fax_os(), FALSE, "toy.stable", sep = "\r"))
+  expect_named(as.list(.zufax$cache), paste("/", zufax_os(), FALSE, "toy.stable", sep = "\r"))
 })
 
 test_that("warnings inside resolvers are muffled", {

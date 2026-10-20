@@ -1,21 +1,21 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# fax
+# zufax
 
 <!-- badges: start -->
 
-[![R-CMD-check](https://github.com/pedrobtz/fax/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/pedrobtz/fax/actions/workflows/R-CMD-check.yaml)
-[![live](https://github.com/pedrobtz/fax/actions/workflows/live.yaml/badge.svg)](https://github.com/pedrobtz/fax/actions/workflows/live.yaml)
+[![R-CMD-check](https://github.com/pedrobtz/zufax/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/pedrobtz/zufax/actions/workflows/R-CMD-check.yaml)
+[![live](https://github.com/pedrobtz/zufax/actions/workflows/live.yaml/badge.svg)](https://github.com/pedrobtz/zufax/actions/workflows/live.yaml)
 <!-- badges: end -->
 
-fax reports facts about where R is running and what it may actually use.
+zufax reports facts about where R is running and what it may actually use.
 
 Inside a container, `parallel::detectCores()` returns the node’s 64
 cores while the pod may use 4, and `/proc/meminfo` shows the node’s
 memory while the container is limited to 8 GiB. Thread pools sized on
 those numbers oversubscribe the CPU, and memory budgets end in OOM
-kills. fax answers three questions on bare metal, VMs, containers,
+kills. zufax answers three questions on bare metal, VMs, containers,
 Kubernetes pods and Azure, on Linux, macOS and Windows:
 
 1.  **Where am I running?** OS, hardware, virtualization, container,
@@ -26,26 +26,26 @@ Kubernetes pods and Azure, on Linux, macOS and Windows:
 
 ## Installation
 
-Install fax from CRAN:
+Install zufax from CRAN:
 
 ``` r
-install.packages("fax")
+install.packages("zufax")
 ```
 
 Or the development version from
-[GitHub](https://github.com/pedrobtz/fax):
+[GitHub](https://github.com/pedrobtz/zufax):
 
 ``` r
 # install.packages("pak")
-pak::pak("pedrobtz/fax")
+pak::pak("pedrobtz/zufax")
 ```
 
 ## Example
 
 ``` r
-library(fax)
+library(zufax)
 facts()
-#> <fax facts>
+#> <zufax facts>
 #> os       macOS 15.7.9
 #> runs in  no container
 #> runs on  bare metal
@@ -58,7 +58,7 @@ facts()
 In a Kubernetes pod limited to 2 CPUs and 1 GiB on an 8-CPU, 32 GiB
 node:
 
-    #> <fax facts>
+    #> <zufax facts>
     #> os       Ubuntu 22.04
     #> runs in  Kubernetes pod default/web-6b8f9-2xkqz, containerd container
     #> runs on  vm (unknown)
@@ -79,7 +79,7 @@ message("batch done ", usage_line())
 #> batch done cpu=1.8/4 thr=3% mem=2.1G/8G(26%) rss=1.2G
 ```
 
-Every fact records its status and source, and fax never fails: what it
+Every fact records its status and source, and zufax never fails: what it
 cannot determine is `NA`.
 
 ``` r
@@ -93,6 +93,6 @@ head(facts_df()[, c("fact", "status", "source")])
 #> 6 os.release.major             ok sw_vers
 ```
 
-fax makes no network requests unless you ask for cloud metadata with
+zufax makes no network requests unless you ask for cloud metadata with
 `facts(cloud = TRUE)`, never reads credentials, and redacts secrets in
 environment variables.

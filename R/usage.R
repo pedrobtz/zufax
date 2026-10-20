@@ -23,7 +23,7 @@
 #' @param max_age Return the previous result if it is at most this many seconds
 #'   old, for very hot loops.
 #' @param ... Passed on to `usage()`.
-#' @returns `usage()`: a named numeric vector of class `fax_usage` with
+#' @returns `usage()`: a named numeric vector of class `zufax_usage` with
 #'   * `time`: when the sample was taken, as seconds since the epoch.
 #'   * `cpu_process`: CPU cores used by this R process since the previous call.
 #'   * `cpu_cgroup`: CPU cores used by the whole container since the previous
@@ -138,7 +138,7 @@ usage <- function(extra = NULL, max_age = 0) {
     out["cpu_pressure"] <- pressure("cpu.cgroup.pressure")
     out["oom_kills"] <- if (setup$linux) first_num(fact("memory.cgroup.oom_kills")) else NA
   }
-  out <- structure(out, class = "fax_usage")
+  out <- structure(out, class = "zufax_usage")
   .usage$prev <- sample
   .usage$last <- out
   out
@@ -149,7 +149,7 @@ usage <- function(extra = NULL, max_age = 0) {
 usage_line <- function(...) format(usage(...))
 
 #' @export
-format.fax_usage <- function(x, ...) {
+format.zufax_usage <- function(x, ...) {
   x <- unclass(x)
   parts <- character()
   cpu <- x[["cpu_cgroup"]] %|NA|% x[["cpu_process"]]
@@ -182,7 +182,7 @@ format.fax_usage <- function(x, ...) {
 }
 
 #' @export
-print.fax_usage <- function(x, ...) {
+print.zufax_usage <- function(x, ...) {
   cat(format(x), "\n", sep = "")
   invisible(x)
 }
@@ -202,8 +202,8 @@ usage_now <- function() {
 # Paths and limits, recomputed when the pid (after fork), root or OS changes.
 usage_setup <- function() {
   pid <- current_pid()
-  root <- fax_root()
-  os <- fax_os()
+  root <- zufax_root()
+  os <- zufax_os()
   if (identical(.usage$pid, pid) && identical(.usage$root, root) && identical(.usage$os, os)) {
     return(.usage$setup)
   }
@@ -229,7 +229,7 @@ usage_setup <- function() {
 }
 
 usage_linux_paths <- function() {
-  root <- fax_root()
+  root <- zufax_root()
   ctx <- new_ctx(new_state())
   layout <- read_cgroup_layout(ctx)
   existing <- function(dir, file) {

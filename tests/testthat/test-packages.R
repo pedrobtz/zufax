@@ -20,7 +20,7 @@ test_that("dpkg packages come from the status file, installed only", {
       "Version: 1.0"
     )
   ))
-  withr::local_options(fax.os = "linux")
+  withr::local_options(zufax.os = "linux")
   f <- facts("packages")
   expect_equal(
     f[["packages.system.installed"]],
@@ -49,7 +49,7 @@ test_that("apk packages come from the installed database", {
       ""
     )
   ))
-  withr::local_options(fax.os = "linux")
+  withr::local_options(zufax.os = "linux")
   f <- facts("packages")
   expect_equal(f[["packages.system.installed"]]$name, c("musl", "busybox"))
   expect_equal(f[["packages.system.manager"]], "apk")
@@ -79,7 +79,7 @@ test_that("pacman packages come from local desc files", {
       "x86_64"
     )
   ))
-  withr::local_options(fax.os = "linux")
+  withr::local_options(zufax.os = "linux")
   out <- fact("packages.system.installed")
   expect_equal(out$name, c("glibc", "r"))
   expect_equal(out$version, c("2.40-1", "4.4.1-1"))
@@ -87,7 +87,7 @@ test_that("pacman packages come from local desc files", {
 
 test_that("rpm packages come from one rpm query", {
   local_root(list("usr/lib/sysimage/rpm/rpmdb.sqlite" = ""))
-  withr::local_options(fax.os = "linux", fax.cmd_mock = function(cmd, args) {
+  withr::local_options(zufax.os = "linux", zufax.cmd_mock = function(cmd, args) {
     if (cmd != "rpm") {
       return(NULL)
     }
@@ -105,7 +105,7 @@ test_that("Homebrew formulae and casks are listed from the Cellar", {
     "opt/homebrew/Caskroom/rstudio/2024.09.0/x" = "",
     "opt/homebrew/Caskroom/rstudio/.metadata/x" = ""
   ))
-  withr::local_options(fax.os = "darwin")
+  withr::local_options(zufax.os = "darwin")
   withr::local_envvar(HOMEBREW_PREFIX = NA)
   out <- fact("packages.system.installed")
   expect_equal(out$name, c("openssl@3", "r", "rstudio"))
@@ -114,7 +114,7 @@ test_that("Homebrew formulae and casks are listed from the Cellar", {
 })
 
 test_that("Windows packages come from the Uninstall registry keys", {
-  withr::local_options(fax.os = "windows")
+  withr::local_options(zufax.os = "windows")
   local_mocked_bindings(read_uninstall_registry = function() {
     list(
       list(
@@ -137,7 +137,7 @@ test_that("Windows packages come from the Uninstall registry keys", {
 
 test_that("no package database means not applicable", {
   local_root()
-  withr::local_options(fax.os = "linux")
+  withr::local_options(zufax.os = "linux")
   withr::local_envvar(HOMEBREW_PREFIX = NA)
   df <- facts_df(facts("packages"), "packages")
   expect_equal(
@@ -167,7 +167,7 @@ test_that("Python packages come from dist-info and egg-info names", {
     )
   )
   local_python_env(VIRTUAL_ENV = venv)
-  withr::local_options(fax.os = "linux")
+  withr::local_options(zufax.os = "linux")
   out <- fact("packages.python")
   out <- out[order(out$name), ]
   expect_equal(out$name, c("numpy", "old-pkg", "typing-extensions"))
@@ -187,7 +187,7 @@ test_that("conda environments add conda-meta packages", {
     )
   )
   local_python_env(CONDA_PREFIX = conda)
-  withr::local_options(fax.os = "linux")
+  withr::local_options(zufax.os = "linux")
   out <- fact("packages.python")
   expect_equal(out$name, c("numpy", "libblas", "python"))
   expect_equal(out$version, c("1.26.4", "3.9.0", "3.11.9"))
@@ -209,7 +209,7 @@ test_that("parse_stanzas() handles missing fields and continuation lines", {
 test_that("system and R inventories are not empty on CI", {
   skip_on_cran()
   skip_if_not(identical(Sys.getenv("GITHUB_ACTIONS"), "true"), "not on GitHub Actions")
-  withr::local_options(fax.root = NULL, fax.os = NULL)
+  withr::local_options(zufax.root = NULL, zufax.os = NULL)
   f <- facts("packages", refresh = TRUE)
   expect_gt(f[["packages.system.count"]], 0)
   expect_gt(nrow(f[["packages.r"]]), 0)
@@ -231,6 +231,6 @@ test_that("distroless images use dpkg status.d files", {
       "Architecture: all"
     )
   ))
-  withr::local_options(fax.os = "linux")
+  withr::local_options(zufax.os = "linux")
   expect_equal(fact("packages.system.installed")$name, c("libc6", "tzdata"))
 })
