@@ -81,7 +81,7 @@ fields are always `NA`.
 
 ``` r
 usage()
-#> cpu=0.6/4 mem=2.7G/15.6G(17%) rss=152.8M
+#> cpu=0.5/4 mem=2.6G/15.6G(17%) rss=152.9M
 message("step done ", usage_line())
-#> step done cpu=0.9/4 thr=0% mem=2.7G/15.6G(17%) rss=152.8M
+#> step done cpu=1.1/4 thr=0% mem=2.6G/15.6G(17%) rss=152.9M
 ```

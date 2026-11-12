@@ -24,7 +24,7 @@ f
 #> runs in  no container
 #> runs on  vm (hyperv), cloud azure
 #> cpu      host 4 | effective 4
-#> memory   host 15.6G | available 14.2G
+#> memory   host 15.6G | available 14.1G
 #> runtime  R 4.6.2
 #> Use facts_df() for every fact with its status and source.
 ```

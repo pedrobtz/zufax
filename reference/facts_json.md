@@ -64,16 +64,16 @@ facts_json(namespaces = "cpu", pretty = TRUE)
 #>     },
 #>     "affinity": 4,
 #>     "load": {
-#>       "1min": 1.11,
-#>       "5min": 0.53,
-#>       "15min": 0.21
+#>       "1min": 1.02,
+#>       "5min": 0.41,
+#>       "15min": 0.15
 #>     },
 #>     "cgroup": {
 #>       "quota": "Inf",
 #>       "cpuset": 4,
 #>       "weight": 100,
 #>       "pressure": {
-#>         "some": 0,
+#>         "some": 0.01,
 #>         "full": 0
 #>       }
 #>     },
