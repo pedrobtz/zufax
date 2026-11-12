@@ -24,8 +24,8 @@ f
 #> runs in  no container
 #> runs on  vm (hyperv), cloud azure
 #> cpu      host 4 | effective 4
-#> memory   host 15.6G | available 14.3G
-#> runtime  R 4.6.1
+#> memory   host 15.6G | available 14.2G
+#> runtime  R 4.6.2
 #> Use facts_df() for every fact with its status and source.
 ```
 
@@ -48,7 +48,7 @@ f[["cpu.host"]]
 #> $sockets
 #> [1] 1
 f[["memory.effective.limit"]]
-#> [1] 16760340480
+#> [1] 16760348672
 ```
 
 Nothing is read until you ask for it, and each fact is read once per
@@ -113,7 +113,7 @@ takes the smallest of:
 effective_cores()
 #> [1] 4
 effective_memory()
-#> [1] 16760340480
+#> [1] 16760348672
 ```
 
 [`effective_memory()`](https://pedrobtz.github.io/zufax/reference/effective_cores.md)

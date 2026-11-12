@@ -87,8 +87,8 @@ summary:</p>
 <span><span class="co">#&gt; runs in  no container</span></span>
 <span><span class="co">#&gt; runs on  vm (hyperv), cloud azure</span></span>
 <span><span class="co">#&gt; cpu      host 4 | effective 4</span></span>
-<span><span class="co">#&gt; memory   host 15.6G | available 14.3G</span></span>
-<span><span class="co">#&gt; runtime  R 4.6.1</span></span>
+<span><span class="co">#&gt; memory   host 15.6G | available 14.2G</span></span>
+<span><span class="co">#&gt; runtime  R 4.6.2</span></span>
 <span><span class="co">#&gt; Use facts_df() for every fact with its status and source.</span></span></code></pre></div>
 <p>Facts are grouped in namespaces such as <code>os</code>,
 <code>cpu</code> and <code>memory</code>. Access a namespace with
@@ -108,7 +108,7 @@ summary:</p>
 <span><span class="co">#&gt; $sockets</span></span>
 <span><span class="co">#&gt; [1] 1</span></span>
 <span><span class="va">f</span><span class="op">[[</span><span class="st">"memory.effective.limit"</span><span class="op">]</span><span class="op">]</span></span>
-<span><span class="co">#&gt; [1] 16760340480</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 16760348672</span></span></code></pre></div>
 <p>Nothing is read until you ask for it, and each fact is read once per
 session. <code>facts(refresh = TRUE)</code> reads again.
 <code><a href="../reference/fact.html">fact()</a></code> gets one value directly:</p>
@@ -160,7 +160,7 @@ threads busy).</li>
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/effective_cores.html">effective_cores</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 4</span></span>
 <span><span class="fu"><a href="../reference/effective_cores.html">effective_memory</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 16760340480</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 16760348672</span></span></code></pre></div>
 <p><code><a href="../reference/effective_cores.html">effective_memory()</a></code> is the smaller of host memory and the
 cgroup memory limit. <code>effective_memory("available")</code> is what
 can still be allocated, counting reclaimable page cache as free.</p>

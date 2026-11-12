@@ -11,12 +11,12 @@ once per session, and each call reads three small files on Linux (about
 library(zufax)
 u <- usage()
 u
-#> cpu=1.5/4 mem=2.8G/15.6G(18%) rss=113.9M
+#> cpu=1.4/4 mem=2.9G/15.6G(18%) rss=113.9M
 unclass(u)
 #>          time   cpu_process    cpu_cgroup cpu_throttled     cpu_limit 
-#>  1.792502e+09  1.533066e+00            NA            NA  4.000000e+00 
+#>  1.794477e+09  1.407108e+00            NA            NA  4.000000e+00 
 #>       mem_rss    mem_cgroup     mem_limit       mem_pct 
-#>  1.194680e+08  2.980209e+09  1.676034e+10  1.778131e-01
+#>  1.194476e+08  3.071758e+09  1.676035e+10  1.832753e-01
 ```
 
 [`usage_line()`](https://pedrobtz.github.io/zufax/reference/usage.md)

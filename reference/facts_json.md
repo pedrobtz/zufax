@@ -53,9 +53,9 @@ for the same information as a data frame.
 facts_json(namespaces = "cpu", pretty = TRUE)
 #> {
 #>   "cpu": {
-#>     "model": "AMD EPYC 9V45 96-Core Processor",
+#>     "model": "AMD EPYC 9V74 80-Core Processor",
 #>     "vendor": "AMD",
-#>     "flags": ["fpu", "vme", "de", "pse", "tsc", "msr", "pae", "mce", "cx8", "apic", "sep", "mtrr", "pge", "mca", "cmov", "pat", "pse36", "clflush", "mmx", "fxsr", "sse", "sse2", "ht", "syscall", "nx", "mmxext", "fxsr_opt", "pdpe1gb", "rdtscp", "lm", "constant_tsc", "rep_good", "nopl", "xtopology", "tsc_reliable", "nonstop_tsc", "cpuid", "extd_apicid", "aperfmperf", "tsc_known_freq", "pni", "pclmulqdq", "ssse3", "fma", "cx16", "pcid", "sse4_1", "sse4_2", "x2apic", "movbe", "popcnt", "aes", "xsave", "avx", "f16c", "rdrand", "hypervisor", "lahf_lm", "cmp_legacy", "svm", "cr8_legacy", "abm", "sse4a", "misalignsse", "3dnowprefetch", "osvw", "topoext", "vmmcall", "fsgsbase", "bmi1", "avx2", "smep", "bmi2", "erms", "invpcid", "avx512f", "avx512dq", "rdseed", "adx", "smap", "avx512ifma", "clflushopt", "clwb", "avx512cd", "sha_ni", "avx512bw", "avx512vl", "xsaveopt", "xsavec", "xgetbv1", "xsaves", "user_shstk", "avx_vnni", "avx512_bf16", "clzero", "xsaveerptr", "rdpru", "arat", "npt", "nrip_save", "tsc_scale", "vmcb_clean", "flushbyasid", "decodeassists", "pausefilter", "pfthreshold", "v_vmsave_vmload", "avx512vbmi", "umip", "avx512_vbmi2", "gfni", "vaes", "vpclmulqdq", "avx512_vnni", "avx512_bitalg", "avx512_vpopcntdq", "rdpid", "fsrm", "avx512_vp2intersect"],
+#>     "flags": ["fpu", "vme", "de", "pse", "tsc", "msr", "pae", "mce", "cx8", "apic", "sep", "mtrr", "pge", "mca", "cmov", "pat", "pse36", "clflush", "mmx", "fxsr", "sse", "sse2", "ht", "syscall", "nx", "mmxext", "fxsr_opt", "pdpe1gb", "rdtscp", "lm", "constant_tsc", "rep_good", "nopl", "xtopology", "tsc_reliable", "nonstop_tsc", "cpuid", "extd_apicid", "aperfmperf", "tsc_known_freq", "pni", "pclmulqdq", "ssse3", "fma", "cx16", "pcid", "sse4_1", "sse4_2", "movbe", "popcnt", "aes", "xsave", "avx", "f16c", "rdrand", "hypervisor", "lahf_lm", "cmp_legacy", "svm", "cr8_legacy", "abm", "sse4a", "misalignsse", "3dnowprefetch", "osvw", "topoext", "vmmcall", "fsgsbase", "bmi1", "avx2", "smep", "bmi2", "erms", "invpcid", "avx512f", "avx512dq", "rdseed", "adx", "smap", "avx512ifma", "clflushopt", "clwb", "avx512cd", "sha_ni", "avx512bw", "avx512vl", "xsaveopt", "xsavec", "xgetbv1", "xsaves", "user_shstk", "avx512_bf16", "clzero", "xsaveerptr", "rdpru", "arat", "npt", "nrip_save", "tsc_scale", "vmcb_clean", "flushbyasid", "decodeassists", "pausefilter", "pfthreshold", "v_vmsave_vmload", "avx512vbmi", "umip", "avx512_vbmi2", "gfni", "vaes", "vpclmulqdq", "avx512_vnni", "avx512_bitalg", "avx512_vpopcntdq", "rdpid", "fsrm"],
 #>     "isa_level": "x86-64-v4",
 #>     "host": {
 #>       "logical": 4,
@@ -64,8 +64,8 @@ facts_json(namespaces = "cpu", pretty = TRUE)
 #>     },
 #>     "affinity": 4,
 #>     "load": {
-#>       "1min": 1.07,
-#>       "5min": 0.52,
+#>       "1min": 1.11,
+#>       "5min": 0.53,
 #>       "15min": 0.21
 #>     },
 #>     "cgroup": {
